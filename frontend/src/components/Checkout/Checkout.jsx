@@ -8,6 +8,7 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
+// Componente funcional que representa la página de checkout.
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
@@ -26,32 +27,39 @@ const Checkout = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Función para manejar el envío del formulario de pago.
   const paymentSubmit = () => {
-   if(address1 === "" || address2 === "" || zipCode === null || country === "" || city === ""){
-      toast.error("Please choose your delivery address!")
-   } else{
-    const shippingAddress = {
-      address1,
-      address2,
-      zipCode,
-      country,
-      city,
-    };
+    if (
+      address1 === "" ||
+      address2 === "" ||
+      zipCode === null ||
+      country === "" ||
+      city === ""
+    ) {
+      toast.error("Please choose your delivery address!");
+    } else {
+      const shippingAddress = {
+        address1,
+        address2,
+        zipCode,
+        country,
+        city,
+      };
 
-    const orderData = {
-      cart,
-      totalPrice,
-      subTotalPrice,
-      shipping,
-      discountPrice,
-      shippingAddress,
-      user,
+      const orderData = {
+        cart,
+        totalPrice,
+        subTotalPrice,
+        shipping,
+        discountPrice,
+        shippingAddress,
+        user,
+      };
+
+      // Actualizar el almacenamiento local con la última orden.
+      localStorage.setItem("latestOrder", JSON.stringify(orderData));
+      navigate("/payment");
     }
-
-    // update local storage with the updated orders array
-    localStorage.setItem("latestOrder", JSON.stringify(orderData));
-    navigate("/payment");
-   }
   };
 
   const subTotalPrice = cart.reduce(
@@ -59,9 +67,10 @@ const Checkout = () => {
     0
   );
 
-  // this is shipping cost variable
+  // Costo de envío
   const shipping = subTotalPrice * 0.1;
 
+  // Función para manejar la subida del formulario de cupón.
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;
@@ -88,7 +97,7 @@ const Checkout = () => {
         }
       }
       if (res.data.couponCode === null) {
-        toast.error("Coupon code doesn't exists!");
+        toast.error("Coupon code doesn't exist!");
         setCouponCode("");
       }
     });
@@ -144,6 +153,7 @@ const Checkout = () => {
   );
 };
 
+// Componente funcional que representa la información de envío.
 const ShippingInfo = ({
   user,
   country,
@@ -281,7 +291,7 @@ const ShippingInfo = ({
         <div>
           {user &&
             user.addresses.map((item, index) => (
-              <div className="w-full flex mt-1">
+              <div className="w-full flex mt-1" key={index}>
                 <input
                   type="checkbox"
                   className="mr-3"
@@ -303,6 +313,7 @@ const ShippingInfo = ({
   );
 };
 
+// Componente funcional que representa la información del carrito y el formulario de cupón.
 const CartData = ({
   handleSubmit,
   totalPrice,
@@ -336,7 +347,7 @@ const CartData = ({
         <input
           type="text"
           className={`${styles.input} h-[40px] pl-2`}
-          placeholder="Coupoun code"
+          placeholder="Coupon code"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           required
@@ -353,3 +364,4 @@ const CartData = ({
 };
 
 export default Checkout;
+

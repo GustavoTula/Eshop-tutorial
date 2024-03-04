@@ -8,19 +8,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 
+// Componente funcional que representa el carrito de compras.
 const Cart = ({ setOpenCart }) => {
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
+  // Función para manejar la eliminación de un producto del carrito.
   const removeFromCartHandler = (data) => {
     dispatch(removeFromCart(data));
   };
 
+  // Calcular el precio total de los productos en el carrito.
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.qty * item.discountPrice,
     0
   );
 
+  // Función para manejar el cambio de cantidad de un producto en el carrito.
   const quantityChangeHandler = (data) => {
     dispatch(addTocart(data));
   };
@@ -49,7 +53,7 @@ const Cart = ({ setOpenCart }) => {
                   onClick={() => setOpenCart(false)}
                 />
               </div>
-              {/* Item length */}
+              {/* Número total de artículos en el carrito. */}
               <div className={`${styles.noramlFlex} p-4`}>
                 <IoBagHandleOutline size={25} />
                 <h5 className="pl-2 text-[20px] font-[500]">
@@ -57,7 +61,7 @@ const Cart = ({ setOpenCart }) => {
                 </h5>
               </div>
 
-              {/* cart Single Items */}
+              {/* Lista de artículos en el carrito. */}
               <br />
               <div className="w-full border-t">
                 {cart &&
@@ -73,7 +77,7 @@ const Cart = ({ setOpenCart }) => {
             </div>
 
             <div className="px-5 mb-3">
-              {/* checkout buttons */}
+              {/* Botones de pago */}
               <Link to="/checkout">
                 <div
                   className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
@@ -91,10 +95,12 @@ const Cart = ({ setOpenCart }) => {
   );
 };
 
+// Componente funcional que representa un artículo individual en el carrito.
 const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
   const [value, setValue] = useState(data.qty);
   const totalPrice = data.discountPrice * value;
 
+  // Función para incrementar la cantidad de un producto en el carrito.
   const increment = (data) => {
     if (data.stock < value) {
       toast.error("Product stock limited!");
@@ -105,6 +111,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
     }
   };
 
+  // Función para decrementar la cantidad de un producto en el carrito.
   const decrement = (data) => {
     setValue(value === 1 ? 1 : value - 1);
     const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
@@ -153,3 +160,4 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
 };
 
 export default Cart;
+
