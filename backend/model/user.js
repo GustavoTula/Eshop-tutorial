@@ -1,52 +1,61 @@
+// Este módulo define el esquema de datos para los usuarios utilizando Mongoose, un ODM para MongoDB.
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// Define el esquema para los usuarios utilizando la API de Schema proporcionada por Mongoose.
 const userSchema = new mongoose.Schema({
-  name:{
+  // Nombre del usuario, obligatorio.
+  name: {
     type: String,
     required: [true, "Please enter your name!"],
   },
-  email:{
+  // Correo electrónico del usuario, obligatorio.
+  email: {
     type: String,
     required: [true, "Please enter your email!"],
   },
-  password:{
+  // Contraseña del usuario, obligatoria, con reglas de longitud y no seleccionable para evitar su exposición.
+  password: {
     type: String,
     required: [true, "Please enter your password"],
     minLength: [4, "Password should be greater than 4 characters"],
     select: false,
   },
-  phoneNumber:{
+  // Número de teléfono del usuario.
+  phoneNumber: {
     type: Number,
   },
-  addresses:[
+  // Direcciones del usuario, almacenadas como un array de objetos con información detallada sobre cada dirección.
+  addresses: [
     {
       country: {
         type: String,
       },
-      city:{
+      city: {
         type: String,
       },
-      address1:{
+      address1: {
         type: String,
       },
-      address2:{
+      address2: {
         type: String,
       },
-      zipCode:{
+      zipCode: {
         type: Number,
       },
-      addressType:{
+      addressType: {
         type: String,
       },
     }
   ],
-  role:{
+  // Rol del usuario con un valor predeterminado de "user".
+  role: {
     type: String,
     default: "user",
   },
-  avatar:{
+  // Avatar del usuario con un identificador público y una URL.
+  avatar: {
     public_id: {
       type: String,
       required: true,
@@ -55,35 +64,38 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
- },
- createdAt:{
-  type: Date,
-  default: Date.now(),
- },
- resetPasswordToken: String,
- resetPasswordTime: Date,
+  },
+  // Fecha y hora de creación del usuario, con un valor predeterminado de la fecha actual.
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  // Token para restablecer la contraseña del usuario.
+  resetPasswordToken: String,
+  // Tiempo de restablecimiento de la contraseña.
+  resetPasswordTime: Date,
 });
 
-
-//  Hash password
-userSchema.pre("save", async function (next){
-  if(!this.isModified("password")){
+// Middleware previo a la acción de guardar para cifrar la contraseña antes de almacenarla.
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     next();
   }
 
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// jwt token
+// Método para generar un token JWT para el usuario.
 userSchema.methods.getJwtToken = function () {
-  return jwt.sign({ id: this._id}, process.env.JWT_SECRET_KEY,{
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES,
   });
 };
 
-// compare password
+// Método para comparar la contraseña ingresada con la almacenada en el usuario.
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Exporta el modelo de usuario creado a partir del esquema definido.
 module.exports = mongoose.model("User", userSchema);
