@@ -1,11 +1,16 @@
-class ErrorHandler extends Error{
-    constructor(message,statusCode){
+// Esta clase personalizada, ErrorHandler, extiende la clase Error de JavaScript.
+class ErrorHandler extends Error {
+    // Constructor de la clase que toma un mensaje de error y un código de estado HTTP.
+    constructor(message, statusCode) {
+        // Llama al constructor de la clase Error con el mensaje de error proporcionado.
         super(message);
-        this.statusCode = statusCode
+        // Almacena el código de estado HTTP en la instancia de la clase.
+        this.statusCode = statusCode;
 
-        Error.captureStackTrace(this,this.constructor);
-
+        // Captura la pila de llamadas para obtener información sobre dónde se originó el error.
+        Error.captureStackTrace(this, this.constructor);
     }
-    
 }
-module.exports = ErrorHandler
+
+// Exporta la clase ErrorHandler para que pueda ser utilizada en otros módulos.
+module.exports = ErrorHandler;

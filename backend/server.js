@@ -1,42 +1,44 @@
+// Importa la aplicación Express y las funciones necesarias
 const app = require("./app");
 const connectDatabase = require("./db/Database");
 const cloudinary = require("cloudinary");
 
-// Handling uncaught Exception
+// Manejo de excepciones no capturadas
 process.on("uncaughtException", (err) => {
   console.log(`Error: ${err.message}`);
-  console.log(`shutting down the server for handling uncaught exception`);
+  console.log(`Shutting down the server due to uncaught exception`);
 });
 
-// config
+// Configuración en entorno de desarrollo
 if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({
     path: "config/.env",
   });
 }
 
-// connect db
+// Conecta con la base de datos
 connectDatabase();
 
+// Configuración de Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
-})
+});
 
-
-// create server
+// Crea el servidor
 const server = app.listen(process.env.PORT, () => {
   console.log(
     `Server is running on http://localhost:${process.env.PORT}`
   );
 });
 
-// unhandled promise rejection
+// Rechazo de promesa no manejado
 process.on("unhandledRejection", (err) => {
   console.log(`Shutting down the server for ${err.message}`);
-  console.log(`shutting down the server for unhandle promise rejection`);
+  console.log(`Shutting down the server due to unhandled promise rejection`);
 
+  // Cierra el servidor y finaliza el proceso
   server.close(() => {
     process.exit(1);
   });
