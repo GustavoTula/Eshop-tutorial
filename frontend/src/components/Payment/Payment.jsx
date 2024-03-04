@@ -16,6 +16,7 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
 
+// Componente principal para la página de pago
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -24,11 +25,21 @@ const Payment = () => {
   const stripe = useStripe();
   const elements = useElements();
 
+  // Obtener datos del pedido desde el almacenamiento local
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
     setOrderData(orderData);
   }, []);
 
+  // Objeto que contiene los detalles del pedido
+  const order = {
+    cart: orderData?.cart,
+    shippingAddress: orderData?.shippingAddress,
+    user: user && user,
+    totalPrice: orderData?.totalPrice,
+  };
+
+  // Función para crear la orden de PayPal
   const createOrder = (data, actions) => {
     return actions.order
       .create({
@@ -41,7 +52,6 @@ const Payment = () => {
             },
           },
         ],
-        // not needed if a shipping address is actually needed
         application_context: {
           shipping_preference: "NO_SHIPPING",
         },
@@ -51,13 +61,7 @@ const Payment = () => {
       });
   };
 
-  const order = {
-    cart: orderData?.cart,
-    shippingAddress: orderData?.shippingAddress,
-    user: user && user,
-    totalPrice: orderData?.totalPrice,
-  };
-
+  // Función para manejar la aprobación de la orden de PayPal
   const onApprove = async (data, actions) => {
     return actions.order.capture().then(function (details) {
       const { payer } = details;
@@ -70,6 +74,7 @@ const Payment = () => {
     });
   };
 
+  // Función para manejar el pago con PayPal
   const paypalPaymentHandler = async (paymentInfo) => {
     const config = {
       headers: {
@@ -95,10 +100,12 @@ const Payment = () => {
       });
   };
 
+  // Objeto que contiene los datos para el pago con tarjeta
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
   };
 
+  // Función para manejar el pago con tarjeta
   const paymentHandler = async (e) => {
     e.preventDefault();
     try {
@@ -150,6 +157,7 @@ const Payment = () => {
     }
   };
 
+  // Función para manejar el pago contra reembolso
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
 
@@ -175,6 +183,7 @@ const Payment = () => {
     });
   };
 
+  // Estructura del componente
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
@@ -197,6 +206,7 @@ const Payment = () => {
   );
 };
 
+// Componente secundario para mostrar información de pago y opciones
 const PaymentInfo = ({
   user,
   open,
@@ -208,9 +218,9 @@ const PaymentInfo = ({
 }) => {
   const [select, setSelect] = useState(1);
 
+  // Estructura del componente
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
-      {/* select buttons */}
       <div>
         <div className="flex w-full pb-5 border-b mb-2">
           <div
@@ -226,7 +236,6 @@ const PaymentInfo = ({
           </h4>
         </div>
 
-        {/* pay with card */}
         {select === 1 ? (
           <div className="w-full flex border-b">
             <form className="w-full" onSubmit={paymentHandler}>
@@ -321,7 +330,6 @@ const PaymentInfo = ({
       </div>
 
       <br />
-      {/* paypal payment */}
       <div>
         <div className="flex w-full pb-5 border-b mb-2">
           <div
@@ -337,7 +345,6 @@ const PaymentInfo = ({
           </h4>
         </div>
 
-        {/* pay with payement */}
         {select === 2 ? (
           <div className="w-full flex border-b">
             <div
@@ -376,7 +383,6 @@ const PaymentInfo = ({
       </div>
 
       <br />
-      {/* cash on delivery */}
       <div>
         <div className="flex w-full pb-5 border-b mb-2">
           <div
@@ -392,7 +398,6 @@ const PaymentInfo = ({
           </h4>
         </div>
 
-        {/* cash on delivery */}
         {select === 3 ? (
           <div className="w-full flex">
             <form className="w-full" onSubmit={cashOnDeliveryHandler}>
@@ -409,8 +414,11 @@ const PaymentInfo = ({
   );
 };
 
+// Componente secundario para mostrar los detalles del carrito y el resumen de pago
 const CartData = ({ orderData }) => {
   const shipping = orderData?.shipping?.toFixed(2);
+
+  // Estructura del componente
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">

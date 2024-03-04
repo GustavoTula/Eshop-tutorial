@@ -6,35 +6,41 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
+// Componente funcional para la página de inicio de sesión
 const Login = () => {
+  // Hooks de estado para el formulario
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
+  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await axios
-      .post(
+    try {
+      // Petición de inicio de sesión al servidor
+      const response = await axios.post(
         `${server}/user/login-user`,
         {
           email,
           password,
         },
         { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success("Login Success!");
-        navigate("/");
-        window.location.reload(true); 
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+      );
+
+      // Éxito en el inicio de sesión
+      toast.success("Login Success!");
+      navigate("/");
+      window.location.reload(true); // Actualizar la página después del inicio de sesión
+    } catch (error) {
+      // Error en el inicio de sesión
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
+    // Estructura del formulario
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -44,6 +50,7 @@ const Login = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Campo de entrada para la dirección de correo electrónico */}
             <div>
               <label
                 htmlFor="email"
@@ -63,6 +70,7 @@ const Login = () => {
                 />
               </div>
             </div>
+            {/* Campo de entrada para la contraseña con opción de visibilidad */}
             <div>
               <label
                 htmlFor="password"
@@ -80,6 +88,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
+                {/* Icono de ojo para cambiar la visibilidad de la contraseña */}
                 {visible ? (
                   <AiOutlineEye
                     className="absolute right-2 top-2 cursor-pointer"
@@ -95,6 +104,7 @@ const Login = () => {
                 )}
               </div>
             </div>
+            {/* Opciones adicionales como recordar contraseña y enlace de registro */}
             <div className={`${styles.noramlFlex} justify-between`}>
               <div className={`${styles.noramlFlex}`}>
                 <input
@@ -119,6 +129,7 @@ const Login = () => {
                 </a>
               </div>
             </div>
+            {/* Botón de envío del formulario */}
             <div>
               <button
                 type="submit"
@@ -127,6 +138,7 @@ const Login = () => {
                 Submit
               </button>
             </div>
+            {/* Enlace para redirigir al usuario a la página de registro */}
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Not have any account?</h4>
               <Link to="/sign-up" className="text-blue-600 pl-2">
