@@ -17,12 +17,16 @@ import Cart from "../cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 
+// Componente funcional Header que representa la barra de navegación de la aplicación.
 const Header = ({ activeHeading }) => {
+  // Obtener datos del estado global utilizando Redux
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { allProducts } = useSelector((state) => state.products);
+
+  // Estados locales para gestionar interacciones en el componente
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -31,6 +35,7 @@ const Header = ({ activeHeading }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Manejar cambios en el campo de búsqueda
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -43,6 +48,7 @@ const Header = ({ activeHeading }) => {
     setSearchData(filteredProducts);
   };
 
+  // Escuchar el evento de desplazamiento para cambiar la apariencia de la barra de navegación
   window.addEventListener("scroll", () => {
     if (window.scrollY > 70) {
       setActive(true);
@@ -51,8 +57,10 @@ const Header = ({ activeHeading }) => {
     }
   });
 
+  // Renderizar el componente
   return (
     <>
+      {/* Barra de navegación para pantallas grandes */}
       <div className={`${styles.section}`}>
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
@@ -63,7 +71,7 @@ const Header = ({ activeHeading }) => {
               />
             </Link>
           </div>
-          {/* search box */}
+          {/* Cuadro de búsqueda */}
           <div className="w-[50%] relative">
             <input
               type="text"
@@ -81,7 +89,7 @@ const Header = ({ activeHeading }) => {
                 {searchData &&
                   searchData.map((i, index) => {
                     return (
-                      <Link to={`/product/${i._id}`}>
+                      <Link to={`/product/${i._id}`} key={index}>
                         <div className="w-full flex items-start-py-3">
                           <img
                             src={`${i.images[0]?.url}`}
@@ -107,6 +115,8 @@ const Header = ({ activeHeading }) => {
           </div>
         </div>
       </div>
+
+      {/* Barra de navegación para pantallas medianas y grandes */}
       <div
         className={`${
           active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
@@ -115,7 +125,7 @@ const Header = ({ activeHeading }) => {
         <div
           className={`${styles.section} relative ${styles.noramlFlex} justify-between`}
         >
-          {/* categories */}
+          {/* Menú desplegable para categorías */}
           <div onClick={() => setDropDown(!dropDown)}>
             <div className="relative h-[60px] mt-[10px] w-[270px] hidden 1000px:block">
               <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
@@ -137,12 +147,13 @@ const Header = ({ activeHeading }) => {
               ) : null}
             </div>
           </div>
-          {/* navitems */}
+          {/* Elementos de navegación */}
           <div className={`${styles.noramlFlex}`}>
             <Navbar active={activeHeading} />
           </div>
 
           <div className="flex">
+            {/* Iconos de carrito, lista de deseos y perfil */}
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
@@ -154,7 +165,6 @@ const Header = ({ activeHeading }) => {
                 </span>
               </div>
             </div>
-
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
@@ -169,7 +179,6 @@ const Header = ({ activeHeading }) => {
                 </span>
               </div>
             </div>
-
             <div className={`${styles.noramlFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
                 {isAuthenticated ? (
@@ -187,11 +196,9 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
             </div>
-
-            {/* cart popup */}
+            {/* Mostrar el popup de carrito cuando esté abierto */}
             {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
-
-            {/* wishlist popup */}
+            {/* Mostrar el popup de lista de deseos cuando esté abierto */}
             {openWishlist ? (
               <Wishlist setOpenWishlist={setOpenWishlist} />
             ) : null}
@@ -199,7 +206,7 @@ const Header = ({ activeHeading }) => {
         </div>
       </div>
 
-      {/* mobile header */}
+      {/* Encabezado para dispositivos móviles */}
       <div
         className={`${
           active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
@@ -224,6 +231,7 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
           <div>
+            {/* Icono de carrito para dispositivos móviles */}
             <div
               className="relative mr-[20px]"
               onClick={() => setOpenCart(true)}
@@ -234,19 +242,19 @@ const Header = ({ activeHeading }) => {
               </span>
             </div>
           </div>
-          {/* cart popup */}
+          {/* Mostrar el popup de carrito cuando esté abierto */}
           {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
-
-          {/* wishlist popup */}
+          {/* Mostrar el popup de lista de deseos cuando esté abierto */}
           {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
         </div>
 
-        {/* header sidebar */}
+        {/* Barra lateral del encabezado para dispositivos móviles */}
         {open && (
           <div
             className={`fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0`}
           >
             <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
+              {/* Encabezado de la barra lateral con iconos de lista de deseos y cierre */}
               <div className="w-full justify-between flex pr-3">
                 <div>
                   <div
@@ -266,6 +274,7 @@ const Header = ({ activeHeading }) => {
                 />
               </div>
 
+              {/* Campo de búsqueda en la barra lateral */}
               <div className="my-8 w-[92%] m-auto h-[40px relative]">
                 <input
                   type="search"
@@ -278,10 +287,9 @@ const Header = ({ activeHeading }) => {
                   <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
                     {searchData.map((i) => {
                       const d = i.name;
-
                       const Product_name = d.replace(/\s+/g, "-");
                       return (
-                        <Link to={`/product/${Product_name}`}>
+                        <Link to={`/product/${Product_name}`} key={i._id}>
                           <div className="flex items-center">
                             <img
                               src={i.image_Url[0]?.url}
@@ -297,7 +305,10 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
 
+              {/* Elementos de navegación en la barra lateral */}
               <Navbar active={activeHeading} />
+
+              {/* Botón para convertirse en vendedor en la barra lateral */}
               <div className={`${styles.button} ml-4 !rounded-[4px]`}>
                 <Link to="/shop-create">
                   <h1 className="text-[#fff] flex items-center">
@@ -305,10 +316,8 @@ const Header = ({ activeHeading }) => {
                   </h1>
                 </Link>
               </div>
-              <br />
-              <br />
-              <br />
 
+              {/* Sección de inicio de sesión y perfil en la barra lateral */}
               <div className="flex w-full justify-center">
                 {isAuthenticated ? (
                   <div>

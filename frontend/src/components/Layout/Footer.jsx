@@ -12,9 +12,11 @@ import {
   footerSupportLinks,
 } from "../../static/data";
 
+// Componente funcional Footer que representa el pie de página de la aplicación.
 const Footer = () => {
   return (
     <div className="bg-[#000] text-white">
+      {/* Sección de suscripción al boletín */}
       <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-[#342ac8] py-7">
         <h1 className="lg:text-4xl text-3xl md:mb-0 mb-6 lg:leading-normal font-semibold md:w-2/5">
           <span className="text-[#56d879]">Subscribe</span> us for get news{" "}
@@ -34,7 +36,10 @@ const Footer = () => {
           </button>
         </div>
       </div>
+
+      {/* Sección principal del pie de página */}
       <div className="grid grid-cols-1 sm:gird-cols-3 lg:grid-cols-4 gap-6 sm:px-8 px-5 py-16 sm:text-center">
+        {/* Sección de información de la empresa */}
         <ul className="px-5 text-center sm:text-start flex sm:block flex-col items-center">
           <img
             src="https://shopo.quomodothemes.website/assets/images/logo.svg"
@@ -42,7 +47,7 @@ const Footer = () => {
             style={{ filter: "brightness(0) invert(1)" }}
           />
           <br />
-          <p>The home and elements needeed to create beatiful products.</p>
+          <p>The home and elements needed to create beautiful products.</p>
           <div className="flex items-center mt-[15px]">
             <AiFillFacebook size={25} className="cursor-pointer" />
             <AiOutlineTwitter
@@ -60,6 +65,7 @@ const Footer = () => {
           </div>
         </ul>
 
+        {/* Enlaces de productos */}
         <ul className="text-center sm:text-start">
           <h1 className="mb-1 font-semibold">Company</h1>
           {footerProductLinks.map((link,index) => (
@@ -75,6 +81,7 @@ const Footer = () => {
           ))}
         </ul>
 
+        {/* Enlaces de la compañía */}
         <ul className="text-center sm:text-start">
           <h1 className="mb-1 font-semibold">Shop</h1>
           {footercompanyLinks.map((link,index) => (
@@ -90,6 +97,7 @@ const Footer = () => {
           ))}
         </ul>
 
+        {/* Enlaces de soporte */}
         <ul className="text-center sm:text-start">
           <h1 className="mb-1 font-semibold">Support</h1>
           {footerSupportLinks.map((link,index) => (
@@ -106,6 +114,7 @@ const Footer = () => {
         </ul>
       </div>
 
+      {/* Sección de derechos de autor y logotipos de pago */}
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10
          text-center pt-2 text-gray-400 text-sm pb-8"
@@ -123,4 +132,5 @@ const Footer = () => {
   );
 };
 
+// Exportar el componente Footer.
 export default Footer;
