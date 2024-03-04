@@ -9,6 +9,8 @@ import { BsHandbag } from "react-icons/bs";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { AiOutlineSetting } from "react-icons/ai";
 
+// Componente funcional que representa la barra lateral del panel de administrador.
+// Recibe la propiedad 'active' para resaltar la pestaña activa.
 const AdminSideBar = ({ active }) => {
   return (
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">

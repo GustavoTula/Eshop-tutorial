@@ -2,47 +2,29 @@ import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {  AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { server } from "../../server";
 
+// Componente funcional que muestra todos los eventos para administradores.
 const AllEvents = () => {
+  // Estado local para almacenar la lista de eventos.
   const [events, setEvents] = useState([]);
+
+  // Efecto que se ejecuta al cargar el componente para obtener los eventos desde el servidor.
   useEffect(() => {
-   axios.get(`${server}/event/admin-all-events`, {withCredentials: true}).then((res) =>{
-    setEvents(res.data.events);
-   })
+    axios.get(`${server}/event/admin-all-events`, { withCredentials: true }).then((res) => {
+      setEvents(res.data.events);
+    });
   }, []);
 
+  // Definición de columnas para la tabla de eventos.
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
-    {
-      field: "name",
-      headerName: "Name",
-      minWidth: 180,
-      flex: 1.4,
-    },
-    {
-      field: "price",
-      headerName: "Price",
-      minWidth: 100,
-      flex: 0.6,
-    },
-    {
-      field: "Stock",
-      headerName: "Stock",
-      type: "number",
-      minWidth: 80,
-      flex: 0.5,
-    },
-
-    {
-      field: "sold",
-      headerName: "Sold out",
-      type: "number",
-      minWidth: 130,
-      flex: 0.6,
-    },
+    { field: "name", headerName: "Name", minWidth: 180, flex: 1.4 },
+    { field: "price", headerName: "Price", minWidth: 100, flex: 0.6 },
+    { field: "Stock", headerName: "Stock", type: "number", minWidth: 80, flex: 0.5 },
+    { field: "sold", headerName: "Sold out", type: "number", minWidth: 130, flex: 0.6 },
     {
       field: "Preview",
       flex: 0.8,
@@ -53,6 +35,7 @@ const AllEvents = () => {
       renderCell: (params) => {
         return (
           <>
+            {/* Enlace para ver detalles del evento al hacer clic en el ícono de ojo */}
             <Link to={`/product/${params.id}?isEvent=true`}>
               <Button>
                 <AiOutlineEye size={20} />
@@ -64,8 +47,8 @@ const AllEvents = () => {
     },
   ];
 
+  // Construcción de filas de datos para la tabla de eventos.
   const row = [];
-
   events &&
     events.forEach((item) => {
       row.push({
@@ -77,6 +60,7 @@ const AllEvents = () => {
       });
     });
 
+  // Renderiza la tabla de eventos.
   return (
     <div className="w-full mx-8 pt-1 mt-10 bg-white">
       <DataGrid
