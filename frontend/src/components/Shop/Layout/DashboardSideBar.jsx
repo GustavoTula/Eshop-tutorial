@@ -9,8 +9,12 @@ import { Link } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 
+// Componente funcional "DashboardSideBar" que representa la barra lateral del panel de control
+
 const DashboardSideBar = ({ active }) => {
   return (
+    // Contenedor principal de la barra lateral con estilos y propiedades visuales
+
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* single item */}
       <div className="w-full flex items-center p-4">
@@ -195,4 +199,5 @@ const DashboardSideBar = ({ active }) => {
   );
 };
 
+// Exporta el componente "DashboardSideBar" para que pueda ser utilizado en otros archivos
 export default DashboardSideBar;
