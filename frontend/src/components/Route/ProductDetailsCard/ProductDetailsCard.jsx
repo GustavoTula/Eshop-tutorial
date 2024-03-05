@@ -1,3 +1,4 @@
+// Importaciones necesarias de React, estilos y varios iconos
 import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
@@ -16,16 +17,23 @@ import {
   removeFromWishlist,
 } from "../../../redux/actions/wishlist";
 
+// Componente funcional que muestra los detalles de un producto
 const ProductDetailsCard = ({ setOpen, data }) => {
+  // Acceso a los estados globales de carrito y lista de deseos mediante useSelector
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
+
+  // Instancia del despachador para realizar acciones en la tienda
   const dispatch = useDispatch();
+
+  // Estados locales para gestionar cantidad de producto y estado de la lista de deseos
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
-  //   const [select, setSelect] = useState(false);
 
+  // Manejador de envío de mensajes (a implementar)
   const handleMessageSubmit = () => {};
 
+  // Funciones para decrementar e incrementar la cantidad de productos
   const decrementCount = () => {
     if (count > 1) {
       setCount(count - 1);
@@ -36,6 +44,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     setCount(count + 1);
   };
 
+  // Manejador para añadir un producto al carrito
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
@@ -51,6 +60,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     }
   };
 
+  // Efecto que actualiza el estado 'click' cuando hay cambios en la lista de deseos
   useEffect(() => {
     if (wishlist && wishlist.find((i) => i._id === data._id)) {
       setClick(true);
@@ -59,16 +69,19 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     }
   }, [wishlist]);
 
+  // Manejador para quitar un producto de la lista de deseos
   const removeFromWishlistHandler = (data) => {
     setClick(!click);
     dispatch(removeFromWishlist(data));
   };
 
+  // Manejador para añadir un producto a la lista de deseos
   const addToWishlistHandler = (data) => {
     setClick(!click);
     dispatch(addToWishlist(data));
   };
 
+  // Renderizado del componente de detalles del producto
   return (
     <div className="bg-[#fff]">
       {data ? (
@@ -81,6 +94,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
             />
 
             <div className="block w-full 800px:flex">
+              {/* Sección de imágenes y enlace al vendedor */}
               <div className="w-full 800px:w-[50%]">
                 <img src={`${data.images && data.images[0]?.url}`} alt="" />
                 <div className="flex">
@@ -109,12 +123,14 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 <h5 className="text-[16px] text-[red] mt-5">(50) Sold out</h5>
               </div>
 
+              {/* Sección de detalles y opciones de compra */}
               <div className="w-full 800px:w-[50%] pt-5 pl-[5px] pr-[5px]">
                 <h1 className={`${styles.productTitle} text-[20px]`}>
                   {data.name}
                 </h1>
                 <p>{data.description}</p>
 
+                {/* Sección de precios */}
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
                     {data.discountPrice}$
@@ -123,8 +139,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     {data.originalPrice ? data.originalPrice + "$" : null}
                   </h3>
                 </div>
+
+                {/* Sección de cantidad y opciones de lista de deseos y carrito */}
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div>
+                    {/* Botones para incrementar y decrementar cantidad */}
                     <button
                       className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
                       onClick={decrementCount}
@@ -142,6 +161,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     </button>
                   </div>
                   <div>
+                    {/* Icono de corazón lleno o vacío según si está en la lista de deseos */}
                     {click ? (
                       <AiFillHeart
                         size={30}
@@ -160,6 +180,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     )}
                   </div>
                 </div>
+
+                {/* Botón de agregar al carrito */}
                 <div
                   className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}
                   onClick={() => addToCartHandler(data._id)}
@@ -177,4 +199,5 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   );
 };
 
+// Exportar el componente para su uso en otras partes de la aplicación
 export default ProductDetailsCard;
