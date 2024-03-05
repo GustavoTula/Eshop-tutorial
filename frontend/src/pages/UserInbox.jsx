@@ -1,3 +1,4 @@
+// Importando las bibliotecas y componentes necesarios
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Layout/Header";
 import { useSelector } from "react-redux";
@@ -9,11 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
+
+// Configuración de la conexión del socket
 const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
+// Componente funcional principal de la bandeja de entrada del usuario
 const UserInbox = () => {
-  const { user,loading } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [currentChat, setCurrentChat] = useState();
@@ -26,6 +30,7 @@ const UserInbox = () => {
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
 
+  // Efecto para manejar la llegada de nuevos mensajes a través del socket
   useEffect(() => {
     socketId.on("getMessage", (data) => {
       setArrivalMessage({
@@ -36,30 +41,33 @@ const UserInbox = () => {
     });
   }, []);
 
+  // Efecto para actualizar los mensajes cuando llega un nuevo mensaje
   useEffect(() => {
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
 
+  // Efecto para obtener la lista de conversaciones del usuario
   useEffect(() => {
     const getConversation = async () => {
       try {
-        const resonse = await axios.get(
+        const response = await axios.get(
           `${server}/conversation/get-all-conversation-user/${user?._id}`,
           {
             withCredentials: true,
           }
         );
 
-        setConversations(resonse.data.conversations);
+        setConversations(response.data.conversations);
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     };
     getConversation();
   }, [user, messages]);
 
+  // Efecto para manejar la conexión del usuario al socket
   useEffect(() => {
     if (user) {
       const sellerId = user?._id;
@@ -70,6 +78,7 @@ const UserInbox = () => {
     }
   }, [user]);
 
+  // Función para verificar si un usuario está en línea
   const onlineCheck = (chat) => {
     const chatMembers = chat.members.find((member) => member !== user?._id);
     const online = onlineUsers.find((user) => user.userId === chatMembers);
@@ -77,7 +86,7 @@ const UserInbox = () => {
     return online ? true : false;
   };
 
-  // get messages
+  // Efecto para obtener los mensajes de la conversación actual
   useEffect(() => {
     const getMessage = async () => {
       try {
@@ -92,7 +101,7 @@ const UserInbox = () => {
     getMessage();
   }, [currentChat]);
 
-  // create new message
+  // Función para enviar un nuevo mensaje
   const sendMessageHandler = async (e) => {
     e.preventDefault();
 
@@ -102,7 +111,7 @@ const UserInbox = () => {
       conversationId: currentChat._id,
     };
     const receiverId = currentChat.members.find(
-      (member) => member !== user?._id
+      (member) => member !== user._id
     );
 
     socketId.emit("sendMessage", {
@@ -128,6 +137,7 @@ const UserInbox = () => {
     }
   };
 
+  // Función para actualizar el último mensaje en la conversación
   const updateLastMessage = async () => {
     socketId.emit("updateLastMessage", {
       lastMessage: newMessage,
@@ -147,6 +157,7 @@ const UserInbox = () => {
       });
   };
 
+  // Función para manejar la subida de imágenes
   const handleImageUpload = async (e) => {
     const reader = new FileReader();
 
@@ -160,14 +171,14 @@ const UserInbox = () => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  // Función para manejar el envío de imágenes
   const imageSendingHandler = async (e) => {
-
     const receiverId = currentChat.members.find(
       (member) => member !== user._id
     );
 
     socketId.emit("sendMessage", {
-      senderId: user._id,
+      senderId: user?._id,
       receiverId,
       images: e,
     });
@@ -193,6 +204,7 @@ const UserInbox = () => {
     }
   };
 
+  // Función para actualizar el último mensaje en la conversación cuando es una imagen
   const updateLastMessageForImage = async () => {
     await axios.put(
       `${server}/conversation/update-last-message/${currentChat._id}`,
@@ -203,10 +215,12 @@ const UserInbox = () => {
     );
   };
 
+  // Efecto para hacer scroll hasta el final de la lista de mensajes cuando se actualiza
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ beahaviour: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Renderización del componente UserInbox
   return (
     <div className="w-full">
       {!open && (
@@ -215,7 +229,7 @@ const UserInbox = () => {
           <h1 className="text-center text-[30px] py-3 font-Poppins">
             All Messages
           </h1>
-          {/* All messages list */}
+          {/* Lista de todas las conversaciones */}
           {conversations &&
             conversations.map((item, index) => (
               <MessageList
@@ -253,6 +267,7 @@ const UserInbox = () => {
   );
 };
 
+// Componente funcional para la lista de conversaciones
 const MessageList = ({
   data,
   index,
@@ -268,11 +283,14 @@ const MessageList = ({
   const [active, setActive] = useState(0);
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
+
+  // Manejador de clics en la lista de conversaciones
   const handleClick = (id) => {
     navigate(`/inbox?${id}`);
     setOpen(true);
   };
 
+  // Efecto para obtener la información del usuario de la conversación
   useEffect(() => {
     setActiveStatus(online);
     const userId = data.members.find((user) => user !== me);
@@ -287,6 +305,7 @@ const MessageList = ({
     getUser();
   }, [me, data]);
 
+  // Renderización del componente MessageList
   return (
     <div
       className={`w-full flex p-3 px-3 ${
@@ -325,6 +344,7 @@ const MessageList = ({
   );
 };
 
+// Componente funcional para la bandeja de entrada del vendedor
 const SellerInbox = ({
   setOpen,
   newMessage,
@@ -337,9 +357,10 @@ const SellerInbox = ({
   scrollRef,
   handleImageUpload,
 }) => {
+  // Renderización del componente SellerInbox
   return (
     <div className="w-[full] min-h-full flex flex-col justify-between p-5">
-      {/* message header */}
+      {/* Encabezado de mensajes */}
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
@@ -359,7 +380,7 @@ const SellerInbox = ({
         />
       </div>
 
-      {/* messages */}
+      {/* Mensajes */}
       <div className="px-3 h-[75vh] py-3 overflow-y-scroll">
         {messages &&
           messages.map((item, index) => (
@@ -401,7 +422,7 @@ const SellerInbox = ({
           ))}
       </div>
 
-      {/* send message input */}
+      {/* Entrada para enviar mensajes */}
       <form
         aria-required={true}
         className="p-3 relative w-full flex justify-between items-center"
@@ -441,4 +462,6 @@ const SellerInbox = ({
   );
 };
 
+// Exportando el componente UserInbox
 export default UserInbox;
+

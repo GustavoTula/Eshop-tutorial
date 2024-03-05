@@ -1,10 +1,13 @@
+// Importando React y los componentes necesarios
 import React from "react";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import Lottie from "react-lottie";
 import animationData from "../Assests/animations/107043-success.json";
 
+// Definiendo el componente funcional OrderSuccessPage
 const OrderSuccessPage = () => {
+  // Renderizando la estructura de la página con el encabezado, componente Success y pie de página
   return (
     <div>
       <Header />
@@ -14,7 +17,9 @@ const OrderSuccessPage = () => {
   );
 };
 
+// Definiendo el componente funcional Success
 const Success = () => {
+  // Opciones por defecto para la animación de Lottie
   const defaultOptions = {
     loop: false,
     autoplay: true,
@@ -23,6 +28,8 @@ const Success = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+
+  // Renderizando la animación de Lottie, un mensaje y espacio en blanco
   return (
     <div>
       <Lottie options={defaultOptions} width={300} height={300} />
@@ -35,4 +42,5 @@ const Success = () => {
   );
 };
 
+// Exportando el componente OrderSuccessPage para su uso en otros archivos
 export default OrderSuccessPage;

@@ -1,22 +1,34 @@
-import React from 'react'
-import AdminHeader from '../components/Layout/AdminHeader'
-import AdminSideBar from '../components/Admin/Layout/AdminSideBar'
+// Importando React y los componentes necesarios para la página
+import React from 'react';
+import AdminHeader from '../components/Layout/AdminHeader';
+import AdminSideBar from '../components/Admin/Layout/AdminSideBar';
 import AllProducts from "../components/Admin/AllProducts";
 
+// Definiendo el componente funcional AdminDashboardProducts
 const AdminDashboardProducts = () => {
   return (
+    // Contenedor principal de la página
     <div>
-    <AdminHeader />
-    <div className="w-full flex">
-      <div className="flex items-start justify-between w-full">
-        <div className="w-[80px] 800px:w-[330px]">
-          <AdminSideBar active={5} />
+      {/* Encabezado del panel de control del administrador */}
+      <AdminHeader />
+
+      {/* Contenedor flex para organizar la estructura de la página */}
+      <div className="w-full flex">
+        {/* Contenedor flex adicional para la disposición de la barra lateral y la sección principal */}
+        <div className="flex items-start justify-between w-full">
+          {/* Contenedor para la barra lateral del panel de control del administrador */}
+          <div className="w-[80px] 800px:w-[330px]">
+            {/* Componente de la barra lateral, con la pestaña activa indicada por 'active={5}' */}
+            <AdminSideBar active={5} />
+          </div>
+
+          {/* Componente principal de la página, que muestra todos los productos */}
+          <AllProducts />
         </div>
-        <AllProducts />
       </div>
     </div>
-  </div>
-  )
+  );
 }
 
-export default AdminDashboardProducts
+// Exportando el componente AdminDashboardProducts para su uso en otros archivos
+export default AdminDashboardProducts;

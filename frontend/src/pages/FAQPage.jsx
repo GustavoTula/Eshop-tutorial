@@ -1,21 +1,32 @@
+// Importando React y los hooks necesarios
 import React, { useState } from "react";
+
+// Importando componentes y estilos necesarios
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import styles from "../styles/styles";
 
+// Definiendo el componente funcional FAQPage
 const FAQPage = () => {
+  // Div principal que envuelve la página FAQ
   return (
     <div>
+      {/* Componente de encabezado con la categoría activa */}
       <Header activeHeading={5} />
+      {/* Componente Faq que contiene las preguntas frecuentes y sus respuestas */}
       <Faq />
+      {/* Componente de pie de página */}
       <Footer />
     </div>
   );
 };
 
+// Definiendo el componente funcional Faq
 const Faq = () => {
+  // Estado local para gestionar la pestaña activa
   const [activeTab, setActiveTab] = useState(0);
 
+  // Función para cambiar la pestaña activa
   const toggleTab = (tab) => {
     if (activeTab === tab) {
       setActiveTab(0);
@@ -24,6 +35,7 @@ const Faq = () => {
     }
   };
 
+  // Retornando la estructura del componente FAQ
   return (
     <div className={`${styles.section} my-8`}>
       <h2 className="text-3xl font-bold text-gray-900 mb-8">FAQ</h2>
