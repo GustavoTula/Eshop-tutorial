@@ -1,4 +1,4 @@
-// navigation Data
+// Datos de navegación para los elementos del menú
 export const navItems = [
     {
       title: "Home",
@@ -22,7 +22,7 @@ export const navItems = [
     },
   ];
   
-  // branding data
+  // Datos de marca para elementos destacados en la interfaz
   export const brandingData = [
     {
       id: 1,
@@ -187,7 +187,7 @@ export const navItems = [
     },
   ];
   
-  // categories data
+  // Datos de categorías para mostrar en la interfaz
   export const categoriesData = [
     {
       id: 1,
@@ -260,7 +260,7 @@ export const navItems = [
     },
   ];
   
-  // product Data
+  // Datos de productos para mostrar en la interfaz
   export const productData = [
     {
       id: 1,
@@ -590,7 +590,7 @@ export const navItems = [
       stock: 10,
     },
   ];
-  
+  // Enlaces de productos para mostrar en el pie de página
   export const footerProductLinks = [
     {
       name: "About us",
@@ -610,7 +610,7 @@ export const navItems = [
       name: "Reviews",
     },
   ];
-  
+  // Enlaces de la empresa para mostrar en el pie de página
   export const footercompanyLinks = [
     {
       name: "Game & Video",
@@ -628,7 +628,7 @@ export const navItems = [
       name: "Events",
     },
   ];
-  
+  // Enlaces de soporte para mostrar en el pie de página
   export const footerSupportLinks = [
     {
       name: "FAQ",

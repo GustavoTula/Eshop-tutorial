@@ -1,22 +1,28 @@
+// Importando dependencias necesarias
 import axios from "axios";
 import { server } from "../../server";
 
-// Acción para crear un evento
-export const createEvent = (data) => async (dispatch) => {
+// Acción para crear un nuevo evento
+export const createevent = (data) => async (dispatch) => {
   try {
-    // Despacha la acción "eventCreateRequest" indicando que se está realizando la solicitud de creación de evento
+    // Despachando una acción para indicar la solicitud de creación de evento
     dispatch({
       type: "eventCreateRequest",
     });
 
-    // Realiza la solicitud para crear un evento y actualiza el estado en caso de éxito
-    const { data: responseData } = await axios.post(`${server}/event/create-event`, data);
+    // Realizando una solicitud a la API para crear un nuevo evento
+    const { data: responseData } = await axios.post(
+      `${server}/event/create-event`,
+      data
+    );
+
+    // Despachando una acción al crear exitosamente un evento
     dispatch({
       type: "eventCreateSuccess",
       payload: responseData.event,
     });
   } catch (error) {
-    // En caso de error, despacha la acción "eventCreateFail" con el mensaje de error
+    // Despachando una acción en caso de error durante la creación del evento
     dispatch({
       type: "eventCreateFail",
       payload: error.response.data.message,
@@ -24,22 +30,24 @@ export const createEvent = (data) => async (dispatch) => {
   }
 };
 
-// Acción para obtener todos los eventos de una tienda
+// Acción para obtener todos los eventos de una tienda específica
 export const getAllEventsShop = (id) => async (dispatch) => {
   try {
-    // Despacha la acción "getAlleventsShopRequest" indicando que se está realizando la solicitud de obtener todos los eventos de una tienda
+    // Despachando una acción para indicar la solicitud de obtener todos los eventos de una tienda
     dispatch({
       type: "getAlleventsShopRequest",
     });
 
-    // Realiza la solicitud para obtener todos los eventos de una tienda y actualiza el estado en caso de éxito
+    // Realizando una solicitud a la API para recuperar todos los eventos de una tienda
     const { data } = await axios.get(`${server}/event/get-all-events/${id}`);
+
+    // Despachando una acción al obtener exitosamente todos los eventos de una tienda
     dispatch({
       type: "getAlleventsShopSuccess",
       payload: data.events,
     });
   } catch (error) {
-    // En caso de error, despacha la acción "getAlleventsShopFailed" con el mensaje de error
+    // Despachando una acción en caso de error durante la solicitud de obtener todos los eventos de una tienda
     dispatch({
       type: "getAlleventsShopFailed",
       payload: error.response.data.message,
@@ -50,25 +58,23 @@ export const getAllEventsShop = (id) => async (dispatch) => {
 // Acción para eliminar un evento de una tienda
 export const deleteEvent = (id) => async (dispatch) => {
   try {
-    // Despacha la acción "deleteeventRequest" indicando que se está realizando la solicitud de eliminación de evento
+    // Despachando una acción para indicar la solicitud de eliminar un evento
     dispatch({
       type: "deleteeventRequest",
     });
 
-    // Realiza la solicitud para eliminar un evento de una tienda y actualiza el estado en caso de éxito
-    const { data } = await axios.delete(
-      `${server}/event/delete-shop-event/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    // Realizando una solicitud a la API para eliminar un evento de una tienda
+    const { data } = await axios.delete(`${server}/event/delete-shop-event/${id}`, {
+      withCredentials: true,
+    });
 
+    // Despachando una acción al eliminar exitosamente un evento
     dispatch({
       type: "deleteeventSuccess",
       payload: data.message,
     });
   } catch (error) {
-    // En caso de error, despacha la acción "deleteeventFailed" con el mensaje de error
+    // Despachando una acción en caso de error durante la solicitud de eliminar un evento
     dispatch({
       type: "deleteeventFailed",
       payload: error.response.data.message,
@@ -79,19 +85,21 @@ export const deleteEvent = (id) => async (dispatch) => {
 // Acción para obtener todos los eventos
 export const getAllEvents = () => async (dispatch) => {
   try {
-    // Despacha la acción "getAlleventsRequest" indicando que se está realizando la solicitud de obtener todos los eventos
+    // Despachando una acción para indicar la solicitud de obtener todos los eventos
     dispatch({
       type: "getAlleventsRequest",
     });
 
-    // Realiza la solicitud para obtener todos los eventos y actualiza el estado en caso de éxito
+    // Realizando una solicitud a la API para recuperar todos los eventos
     const { data } = await axios.get(`${server}/event/get-all-events`);
+
+    // Despachando una acción al obtener exitosamente todos los eventos
     dispatch({
       type: "getAlleventsSuccess",
       payload: data.events,
     });
   } catch (error) {
-    // En caso de error, despacha la acción "getAlleventsFailed" con el mensaje de error
+    // Despachando una acción en caso de error durante la solicitud de obtener todos los eventos
     dispatch({
       type: "getAlleventsFailed",
       payload: error.response.data.message,

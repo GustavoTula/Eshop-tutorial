@@ -1,7 +1,9 @@
+// Importación de módulos y estilos
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
+  // Importación de páginas para rutas principales
   LoginPage,
   SignupPage,
   ActivationPage,
@@ -22,7 +24,9 @@ import {
   TrackOrderPage,
   UserInbox,
 } from "./routes/Routes.js";
+
 import {
+  // Importación de páginas para rutas de tiendas
   ShopDashboardPage,
   ShopCreateProduct,
   ShopAllProducts,
@@ -37,7 +41,9 @@ import {
   ShopWithDrawMoneyPage,
   ShopInboxPage,
 } from "./routes/ShopRoutes";
+
 import {
+  // Importación de páginas para rutas de administrador
   AdminDashboardPage,
   AdminDashboardUsers,
   AdminDashboardSellers,
@@ -46,6 +52,8 @@ import {
   AdminDashboardEvents,
   AdminDashboardWithdraw
 } from "./routes/AdminRoutes";
+
+// Importación de componentes externos y funciones
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Store from "./redux/store";
@@ -61,26 +69,37 @@ import { server } from "./server";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
+// Componente principal de la aplicación
 const App = () => {
+  // Estado para almacenar la clave de la API de Stripe
   const [stripeApikey, setStripeApiKey] = useState("");
 
+  // Función asincrónica para obtener la clave de la API de Stripe
   async function getStripeApikey() {
     const { data } = await axios.get(`${server}/payment/stripeapikey`);
     setStripeApiKey(data.stripeApikey);
   }
+
+  // Efecto de montaje para cargar datos y configuraciones iniciales
   useEffect(() => {
+    // Carga de usuario, vendedor, productos y eventos
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
     Store.dispatch(getAllEvents());
+
+    // Obtener clave de la API de Stripe
     getStripeApikey();
   }, []);
 
+  // Renderización del componente principal
   return (
     <BrowserRouter>
+      {/* Configuración de Stripe solo si se tiene la clave de la API */}
       {stripeApikey && (
         <Elements stripe={loadStripe(stripeApikey)}>
           <Routes>
+            {/* Ruta para el proceso de pago */}
             <Route
               path="/payment"
               element={
@@ -92,6 +111,8 @@ const App = () => {
           </Routes>
         </Elements>
       )}
+
+      {/* Rutas principales de la aplicación */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -151,7 +172,8 @@ const App = () => {
           }
         />
         <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
-        {/* shop Routes */}
+
+        {/* Rutas específicas para tiendas */}
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
         <Route
@@ -259,7 +281,8 @@ const App = () => {
             </SellerProtectedRoute>
           }
         />
-        {/* Admin Routes */}
+
+        {/* Rutas específicas para administradores */}
         <Route
           path="/admin/dashboard"
           element={
@@ -317,6 +340,8 @@ const App = () => {
           }
         />
       </Routes>
+
+      {/* Contenedor de notificaciones de Toast */}
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
@@ -333,4 +358,5 @@ const App = () => {
   );
 };
 
+// Exportación del componente principal
 export default App;
