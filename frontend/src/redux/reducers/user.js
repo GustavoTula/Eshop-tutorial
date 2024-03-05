@@ -1,10 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+// Estado inicial del reductor de usuarios
 const initialState = {
   isAuthenticated: false,
 };
 
+// Reductor de usuarios creado con createReducer de Redux Toolkit
 export const userReducer = createReducer(initialState, {
+  // Acciones para cargar la información del usuario
   LoadUserRequest: (state) => {
     state.loading = true;
   },
@@ -19,7 +22,7 @@ export const userReducer = createReducer(initialState, {
     state.isAuthenticated = false;
   },
 
-  // update user information
+  // Acciones para actualizar la información del usuario
   updateUserInfoRequest: (state) => {
     state.loading = true;
   },
@@ -32,7 +35,7 @@ export const userReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // update user address
+  // Acciones para actualizar la dirección del usuario
   updateUserAddressRequest: (state) => {
     state.addressloading = true;
   },
@@ -46,7 +49,7 @@ export const userReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // delete user address
+  // Acciones para eliminar la dirección del usuario
   deleteUserAddressRequest: (state) => {
     state.addressloading = true;
   },
@@ -60,21 +63,25 @@ export const userReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // get all users --- admin
+  // Acciones para obtener todos los usuarios (administrador)
   getAllUsersRequest: (state) => {
     state.usersLoading = true;
   },
-  getAllUsersSuccess: (state,action) => {
+  getAllUsersSuccess: (state, action) => {
     state.usersLoading = false;
     state.users = action.payload;
   },
-  getAllUsersFailed: (state,action) => {
+  getAllUsersFailed: (state, action) => {
     state.usersLoading = false;
     state.error = action.payload;
   },
+
+  // Acción para limpiar errores
   clearErrors: (state) => {
     state.error = null;
   },
+
+  // Acción para limpiar mensajes de éxito
   clearMessages: (state) => {
     state.successMessage = null;
   },

@@ -1,12 +1,15 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+// Estado inicial del reductor de lista de deseos
 const initialState = {
   wishlist: localStorage.getItem("wishlistItems")
     ? JSON.parse(localStorage.getItem("wishlistItems"))
     : [],
 };
 
+// Reductor de lista de deseos creado con createReducer de Redux Toolkit
 export const wishlistReducer = createReducer(initialState, {
+  // Acción para agregar a la lista de deseos
   addToWishlist: (state, action) => {
     const item = action.payload;
     const isItemExist = state.wishlist.find((i) => i._id === item._id);
@@ -25,6 +28,7 @@ export const wishlistReducer = createReducer(initialState, {
     }
   },
 
+  // Acción para eliminar de la lista de deseos
   removeFromWishlist: (state, action) => {
     return {
       ...state,

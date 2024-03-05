@@ -1,11 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+// Estado inicial del reductor de pedidos
 const initialState = {
   isLoading: true,
 };
 
+// Reductor de pedidos creado con createReducer de Redux Toolkit
 export const orderReducer = createReducer(initialState, {
-  // get all orders of user
+  // Acciones para obtener todos los pedidos de un usuario
   getAllOrdersUserRequest: (state) => {
     state.isLoading = true;
   },
@@ -18,7 +20,7 @@ export const orderReducer = createReducer(initialState, {
     state.error = action.payload;
   },
   
-  // get all orders of shop
+  // Acciones para obtener todos los pedidos de una tienda
   getAllOrdersShopRequest: (state) => {
     state.isLoading = true;
   },
@@ -31,7 +33,7 @@ export const orderReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // get all orders for admin
+  // Acciones para obtener todos los pedidos para el administrador
   adminAllOrdersRequest: (state) => {
     state.adminOrderLoading = true;
   },
@@ -44,6 +46,7 @@ export const orderReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
+  // Acción para limpiar errores
   clearErrors: (state) => {
     state.error = null;
   },

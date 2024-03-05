@@ -1,10 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+// Estado inicial del reductor de productos
 const initialState = {
   isLoading: true,
 };
 
+// Reductor de productos creado con createReducer de Redux Toolkit
 export const productReducer = createReducer(initialState, {
+  // Acciones para crear un nuevo producto
   productCreateRequest: (state) => {
     state.isLoading = true;
   },
@@ -19,7 +22,7 @@ export const productReducer = createReducer(initialState, {
     state.success = false;
   },
 
-  // get all products of shop
+  // Acciones para obtener todos los productos de una tienda
   getAllProductsShopRequest: (state) => {
     state.isLoading = true;
   },
@@ -32,7 +35,7 @@ export const productReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // delete product of a shop
+  // Acciones para eliminar un producto de una tienda
   deleteProductRequest: (state) => {
     state.isLoading = true;
   },
@@ -45,7 +48,7 @@ export const productReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // get all products
+  // Acciones para obtener todos los productos
   getAllProductsRequest: (state) => {
     state.isLoading = true;
   },
@@ -58,6 +61,7 @@ export const productReducer = createReducer(initialState, {
     state.error = action.payload;
   },
   
+  // Acción para limpiar errores
   clearErrors: (state) => {
     state.error = null;
   },

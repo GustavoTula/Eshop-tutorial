@@ -7,7 +7,7 @@ import { cartReducer } from "./reducers/cart";
 import { wishlistReducer } from "./reducers/wishlist";
 import { orderReducer } from "./reducers/order";
 
-
+// Configuración del almacenamiento de Redux Toolkit con múltiples reductores
 const Store = configureStore({
   reducer: {
     user: userReducer,

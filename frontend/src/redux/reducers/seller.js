@@ -1,10 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+// Estado inicial del reductor de vendedores
 const initialState = {
   isLoading: true,
 };
 
+// Reductor de vendedores creado con createReducer de Redux Toolkit
 export const sellerReducer = createReducer(initialState, {
+  // Acciones para cargar la información del vendedor
   LoadSellerRequest: (state) => {
     state.isLoading = true;
   },
@@ -19,7 +22,7 @@ export const sellerReducer = createReducer(initialState, {
     state.isSeller = false;
   },
 
-  // get all sellers ---admin
+  // Acciones para obtener todos los vendedores (administrador)
   getAllSellersRequest: (state) => {
     state.isLoading = true;
   },
@@ -31,6 +34,8 @@ export const sellerReducer = createReducer(initialState, {
     state.isLoading = false;
     state.error = action.payload;
   },
+
+  // Acción para limpiar errores
   clearErrors: (state) => {
     state.error = null;
   },

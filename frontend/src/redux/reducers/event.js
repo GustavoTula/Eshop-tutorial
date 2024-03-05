@@ -1,10 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+// Estado inicial del reductor de eventos
 const initialState = {
   isLoading: true,
 };
 
+// Reductor de eventos creado con createReducer de Redux Toolkit
 export const eventReducer = createReducer(initialState, {
+  // Acciones para la creación de eventos
   eventCreateRequest: (state) => {
     state.isLoading = true;
   },
@@ -19,7 +22,7 @@ export const eventReducer = createReducer(initialState, {
     state.success = false;
   },
 
-  // get all events of shop
+  // Acciones para obtener todos los eventos de una tienda
   getAlleventsShopRequest: (state) => {
     state.isLoading = true;
   },
@@ -32,7 +35,7 @@ export const eventReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // delete event of a shop
+  // Acciones para eliminar un evento de una tienda
   deleteeventRequest: (state) => {
     state.isLoading = true;
   },
@@ -45,7 +48,7 @@ export const eventReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
-  // get all events 
+  // Acciones para obtener todos los eventos
   getAlleventsRequest: (state) => {
     state.isLoading = true;
   },
@@ -58,6 +61,7 @@ export const eventReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
+  // Acción para limpiar errores
   clearErrors: (state) => {
     state.error = null;
   },
