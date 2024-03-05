@@ -10,6 +10,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Componente para ver los detalles de un pedido del usuario
 const UserOrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
@@ -22,12 +23,13 @@ const UserOrderDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
+    dispatch(getAllOrdersOfUser(user._id)); // Obtener todos los pedidos del usuario
   }, [dispatch, user._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
-  const reviewHandler = async (e) => {
+  // Manejar la creación de una reseña
+  const reviewHandler = async () => {
     await axios
       .put(
         `${server}/product/create-new-review`,
@@ -52,19 +54,25 @@ const UserOrderDetails = () => {
       });
   };
 
+  // Manejar la solicitud de reembolso
   const refundHandler = async () => {
-    await axios.put(`${server}/order/order-refund/${id}`, {
-      status: "Processing refund"
-    }).then((res) => {
-      toast.success(res.data.message);
-      dispatch(getAllOrdersOfUser(user._id));
-    }).catch((error) => {
-      toast.error(error.response.data.message);
-    })
+    await axios
+      .put(`${server}/order/order-refund/${id}`, {
+        status: "Processing refund",
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+        dispatch(getAllOrdersOfUser(user._id));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   };
 
+  // Renderizar el componente
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
+      {/* Encabezado de la página */}
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
           <BsFillBagFill size={30} color="crimson" />
@@ -72,6 +80,7 @@ const UserOrderDetails = () => {
         </div>
       </div>
 
+      {/* Información del pedido */}
       <div className="w-full flex items-center justify-between pt-6">
         <h5 className="text-[#00000084]">
           Order ID: <span>#{data?._id?.slice(0, 8)}</span>
@@ -81,7 +90,7 @@ const UserOrderDetails = () => {
         </h5>
       </div>
 
-      {/* order items */}
+      {/* Elementos del pedido */}
       <br />
       <br />
       {data &&
@@ -99,19 +108,19 @@ const UserOrderDetails = () => {
                   US${item.discountPrice} x {item.qty}
                 </h5>
               </div>
-              {!item.isReviewed && data?.status === "Delivered" ? <div
-                className={`${styles.button} text-[#fff]`}
-                onClick={() => setOpen(true) || setSelectedItem(item)}
-              >
-                Write a review
-              </div> : (
-                null
-              )}
+              {!item.isReviewed && data?.status === "Delivered" ? (
+                <div
+                  className={`${styles.button} text-[#fff]`}
+                  onClick={() => setOpen(true) || setSelectedItem(item)}
+                >
+                  Write a review
+                </div>
+              ) : null}
             </div>
-          )
+          );
         })}
 
-      {/* review popup */}
+      {/* Ventana emergente para reseñas */}
       {open && (
         <div className="w-full fixed top-0 left-0 h-screen bg-[#0005] z-50 flex items-center justify-center">
           <div className="w-[50%] h-min bg-[#fff] shadow rounded-md p-3">
@@ -143,7 +152,7 @@ const UserOrderDetails = () => {
             <br />
             <br />
 
-            {/* ratings */}
+            {/* Calificaciones */}
             <h5 className="pl-3 text-[20px] font-[500]">
               Give a Rating <span className="text-red-500">*</span>
             </h5>
@@ -183,7 +192,7 @@ const UserOrderDetails = () => {
                 rows="5"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="How was your product? write your expresion about it!"
+                placeholder="How was your product? Write your expression about it!"
                 className="mt-2 w-[95%] border p-2 outline-none"
               ></textarea>
             </div>
@@ -197,6 +206,7 @@ const UserOrderDetails = () => {
         </div>
       )}
 
+      {/* Información adicional del pedido */}
       <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
           Total Price: <strong>US${data?.totalPrice}</strong>
@@ -223,13 +233,14 @@ const UserOrderDetails = () => {
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
           </h4>
           <br />
-          {
-            data?.status === "Delivered" && (
-              <div className={`${styles.button} text-white`}
-                onClick={refundHandler}
-              >Give a Refund</div>
-            )
-          }
+          {data?.status === "Delivered" && (
+            <div
+              className={`${styles.button} text-white`}
+              onClick={refundHandler}
+            >
+              Give a Refund
+            </div>
+          )}
         </div>
       </div>
       <br />
@@ -243,3 +254,4 @@ const UserOrderDetails = () => {
 };
 
 export default UserOrderDetails;
+

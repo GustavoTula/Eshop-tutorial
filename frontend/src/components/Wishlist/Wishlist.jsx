@@ -7,24 +7,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishlist } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
 
+// Componente para la lista de deseos
 const Wishlist = ({ setOpenWishlist }) => {
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const dispatch = useDispatch();
+  const { wishlist } = useSelector((state) => state.wishlist); // Obtener la lista de deseos del estado global
+  const dispatch = useDispatch(); // Función para despachar acciones Redux
 
+  // Manejar la eliminación de un elemento de la lista de deseos
   const removeFromWishlistHandler = (data) => {
     dispatch(removeFromWishlist(data));
   };
 
+  // Manejar la adición de un elemento al carrito desde la lista de deseos
   const addToCartHandler = (data) => {
-    const newData = {...data, qty:1};
+    const newData = { ...data, qty: 1 };
     dispatch(addTocart(newData));
-    setOpenWishlist(false);
-  }
+    setOpenWishlist(false); // Cerrar la lista de deseos después de agregar al carrito
+  };
 
+  // Renderización del componente
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
       <div className="fixed top-0 right-0 h-full w-[80%] overflow-y-scroll 800px:w-[25%] bg-white flex flex-col justify-between shadow-sm">
         {wishlist && wishlist.length === 0 ? (
+          // Mensaje si la lista de deseos está vacía
           <div className="w-full h-screen flex items-center justify-center">
             <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
               <RxCross1
@@ -45,7 +50,7 @@ const Wishlist = ({ setOpenWishlist }) => {
                   onClick={() => setOpenWishlist(false)}
                 />
               </div>
-              {/* Item length */}
+              {/* Información sobre la cantidad de elementos en la lista de deseos */}
               <div className={`${styles.noramlFlex} p-4`}>
                 <AiOutlineHeart size={25} />
                 <h5 className="pl-2 text-[20px] font-[500]">
@@ -53,12 +58,17 @@ const Wishlist = ({ setOpenWishlist }) => {
                 </h5>
               </div>
 
-              {/* cart Single Items */}
+              {/* Renderizar cada elemento de la lista de deseos */}
               <br />
               <div className="w-full border-t">
                 {wishlist &&
-                  wishlist.map((i, index) => (
-                    <CartSingle key={index} data={i} removeFromWishlistHandler={removeFromWishlistHandler} addToCartHandler={addToCartHandler} />
+                  wishlist.map((item, index) => (
+                    <CartSingle
+                      key={index}
+                      data={item}
+                      removeFromWishlistHandler={removeFromWishlistHandler}
+                      addToCartHandler={addToCartHandler}
+                    />
                   ))}
               </div>
             </div>
@@ -69,15 +79,18 @@ const Wishlist = ({ setOpenWishlist }) => {
   );
 };
 
-const CartSingle = ({ data,removeFromWishlistHandler,addToCartHandler }) => {
-  const [value, setValue] = useState(1);
-  const totalPrice = data.discountPrice * value;
+// Componente para un elemento individual en la lista de deseos
+const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
+  const [value, setValue] = useState(1); // Estado para la cantidad de elementos
+  const totalPrice = data.discountPrice * value; // Cálculo del precio total
 
+  // Renderización del componente individual de la lista de deseos
   return (
     <div className="border-b p-4">
       <div className="w-full 800px:flex items-center">
-        <RxCross1 className="cursor-pointer 800px:mb-['unset'] 800px:ml-['unset'] mb-2 ml-2"
-        onClick={() => removeFromWishlistHandler(data)}
+        <RxCross1
+          className="cursor-pointer 800px:mb-['unset'] 800px:ml-['unset'] mb-2 ml-2"
+          onClick={() => removeFromWishlistHandler(data)}
         />
         <img
           src={`${data?.images[0]?.url}`}
@@ -92,8 +105,11 @@ const CartSingle = ({ data,removeFromWishlistHandler,addToCartHandler }) => {
           </h4>
         </div>
         <div>
-          <BsCartPlus size={20} className="cursor-pointer" tile="Add to cart"
-           onClick={() => addToCartHandler(data)}
+          <BsCartPlus
+            size={20}
+            className="cursor-pointer"
+            title="Add to cart"
+            onClick={() => addToCartHandler(data)}
           />
         </div>
       </div>

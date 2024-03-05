@@ -7,13 +7,15 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
-const Singup = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [visible, setVisible] = useState(false);
-  const [avatar, setAvatar] = useState(null);
+// Componente para el registro de nuevos usuarios
+const Signup = () => {
+  const [email, setEmail] = useState(""); // Estado para el correo electrónico del usuario
+  const [name, setName] = useState(""); // Estado para el nombre del usuario
+  const [password, setPassword] = useState(""); // Estado para la contraseña del usuario
+  const [visible, setVisible] = useState(false); // Estado para controlar la visibilidad de la contraseña
+  const [avatar, setAvatar] = useState(null); // Estado para la imagen de perfil del usuario
 
+  // Manejar el cambio de archivo de entrada de imagen
   const handleFileInputChange = (e) => {
     const reader = new FileReader();
 
@@ -26,6 +28,7 @@ const Singup = () => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  // Manejar el envío del formulario de registro
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,13 +39,14 @@ const Singup = () => {
         setName("");
         setEmail("");
         setPassword("");
-        setAvatar();
+        setAvatar(null);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
       });
   };
 
+  // Renderización del componente
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -53,9 +57,10 @@ const Singup = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Campo de entrada para el nombre del usuario */}
             <div>
               <label
-                htmlFor="email"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
                 Full Name
@@ -73,6 +78,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Campo de entrada para el correo electrónico del usuario */}
             <div>
               <label
                 htmlFor="email"
@@ -93,6 +99,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Campo de entrada para la contraseña del usuario */}
             <div>
               <label
                 htmlFor="password"
@@ -110,6 +117,7 @@ const Singup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
+                {/* Iconos para mostrar/ocultar la contraseña */}
                 {visible ? (
                   <AiOutlineEye
                     className="absolute right-2 top-2 cursor-pointer"
@@ -126,6 +134,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Campo de entrada para la imagen de perfil del usuario */}
             <div>
               <label
                 htmlFor="avatar"
@@ -143,6 +152,7 @@ const Singup = () => {
                     <RxAvatar className="h-8 w-8" />
                   )}
                 </span>
+                {/* Botón para cargar un archivo de imagen */}
                 <label
                   htmlFor="file-input"
                   className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
@@ -160,6 +170,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Botón para enviar el formulario de registro */}
             <div>
               <button
                 type="submit"
@@ -168,6 +179,7 @@ const Singup = () => {
                 Submit
               </button>
             </div>
+            {/* Enlace para iniciar sesión si ya tiene una cuenta */}
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Already have an account?</h4>
               <Link to="/login" className="text-blue-600 pl-2">
@@ -181,4 +193,5 @@ const Singup = () => {
   );
 };
 
-export default Singup;
+export default Signup;
+
