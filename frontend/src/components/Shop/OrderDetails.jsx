@@ -8,21 +8,25 @@ import { server } from "../../server";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Componente funcional para ver los detalles de un pedido
 const OrderDetails = () => {
+  // Obtiene el estado de los pedidos y del vendedor desde Redux
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(""); // Estado local para la actualización del pedido
   const navigate = useNavigate();
+  const { id } = useParams(); // Obtiene el ID del pedido de los parámetros de la URL
 
-  const { id } = useParams();
-
+  // Efecto para obtener todos los pedidos del vendedor al cargar el componente
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch]);
 
+  // Obtiene los detalles del pedido actual
   const data = orders && orders.find((item) => item._id === id);
 
+  // Función para manejar la actualización del estado del pedido
   const orderUpdateHandler = async (e) => {
     await axios
       .put(
@@ -41,27 +45,28 @@ const OrderDetails = () => {
       });
   };
 
+  // Función para manejar la actualización de un pedido de reembolso
   const refundOrderUpdateHandler = async (e) => {
     await axios
-    .put(
-      `${server}/order/order-refund-success/${id}`,
-      {
-        status,
-      },
-      { withCredentials: true }
-    )
-    .then((res) => {
-      toast.success("Order updated!");
-      dispatch(getAllOrdersOfShop(seller._id));
-    })
-    .catch((error) => {
-      toast.error(error.response.data.message);
-    });
-  }
+      .put(
+        `${server}/order/order-refund-success/${id}`,
+        {
+          status,
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        toast.success("Order updated!");
+        dispatch(getAllOrdersOfShop(seller._id));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
 
   console.log(data?.status);
 
-
+  // Renderización del componente
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
       <div className="w-full flex items-center justify-between">
@@ -87,7 +92,7 @@ const OrderDetails = () => {
         </h5>
       </div>
 
-      {/* order items */}
+      {/* Lista de productos en el pedido */}
       <br />
       <br />
       {data &&
@@ -193,6 +198,7 @@ const OrderDetails = () => {
         ) : null
       }
 
+      {/* Botón para actualizar el estado del pedido */}
       <div
         className={`${styles.button} mt-5 !bg-[#FCE1E6] !rounded-[4px] text-[#E94560] font-[600] !h-[45px] text-[18px]`}
         onClick={data?.status !== "Processing refund" ? orderUpdateHandler : refundOrderUpdateHandler}
@@ -203,4 +209,5 @@ const OrderDetails = () => {
   );
 };
 
+// Exporta el componente OrderDetails
 export default OrderDetails;

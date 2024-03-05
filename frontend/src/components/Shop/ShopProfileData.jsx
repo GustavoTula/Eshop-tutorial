@@ -7,6 +7,7 @@ import ProductCard from "../Route/ProductCard/ProductCard";
 import Ratings from "../Products/Ratings";
 import { getAllEventsShop } from "../../redux/actions/event";
 
+// Componente funcional para mostrar la información del perfil de la tienda
 const ShopProfileData = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
   const { events } = useSelector((state) => state.events);
@@ -14,18 +15,22 @@ const ShopProfileData = ({ isOwner }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // Obtener todos los productos y eventos de la tienda al cargar el componente
     dispatch(getAllProductsShop(id));
     dispatch(getAllEventsShop(id));
   }, [dispatch]);
 
   const [active, setActive] = useState(1);
 
+  // Obtener todas las revisiones de los productos de la tienda
   const allReviews =
     products && products.map((product) => product.reviews).flat();
 
+  // Renderización del componente
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
+        {/* Navegación entre pestañas: Productos, Eventos y Revisiones */}
         <div className="w-full flex">
           <div className="flex items-center" onClick={() => setActive(1)}>
             <h5
@@ -45,7 +50,6 @@ const ShopProfileData = ({ isOwner }) => {
               Running Events
             </h5>
           </div>
-
           <div className="flex items-center" onClick={() => setActive(3)}>
             <h5
               className={`font-[600] text-[20px] ${
@@ -56,6 +60,7 @@ const ShopProfileData = ({ isOwner }) => {
             </h5>
           </div>
         </div>
+        {/* Botón para ir al panel de control de la tienda, solo visible para el propietario */}
         <div>
           {isOwner && (
             <div>
@@ -70,6 +75,7 @@ const ShopProfileData = ({ isOwner }) => {
       </div>
 
       <br />
+      {/* Contenido de la pestaña de Productos */}
       {active === 1 && (
         <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
           {products &&
@@ -79,6 +85,7 @@ const ShopProfileData = ({ isOwner }) => {
         </div>
       )}
 
+      {/* Contenido de la pestaña de Eventos */}
       {active === 2 && (
         <div className="w-full">
           <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
@@ -92,6 +99,7 @@ const ShopProfileData = ({ isOwner }) => {
                 />
               ))}
           </div>
+          {/* Mensaje si no hay eventos para la tienda */}
           {events && events.length === 0 && (
             <h5 className="w-full text-center py-5 text-[18px]">
               No Events have for this shop!
@@ -100,11 +108,12 @@ const ShopProfileData = ({ isOwner }) => {
         </div>
       )}
 
+      {/* Contenido de la pestaña de Revisiones */}
       {active === 3 && (
         <div className="w-full">
           {allReviews &&
             allReviews.map((item, index) => (
-              <div className="w-full flex my-4">
+              <div className="w-full flex my-4" key={index}>
                 <img
                   src={`${item.user.avatar?.url}`}
                   className="w-[50px] h-[50px] rounded-full"
@@ -120,6 +129,7 @@ const ShopProfileData = ({ isOwner }) => {
                 </div>
               </div>
             ))}
+          {/* Mensaje si no hay revisiones para la tienda */}
           {allReviews && allReviews.length === 0 && (
             <h5 className="w-full text-center py-5 text-[18px]">
               No Reviews have for this shop!

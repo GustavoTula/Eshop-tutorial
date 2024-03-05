@@ -9,12 +9,13 @@ import { toast } from "react-toastify";
 import { loadSeller } from "../../redux/actions/user";
 import { AiOutlineDelete } from "react-icons/ai";
 
+// Componente para manejar retiros de dinero de la tienda
 const WithdrawMoney = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // Estado para controlar la apertura del modal
   const dispatch = useDispatch();
   const { seller } = useSelector((state) => state.seller);
-  const [paymentMethod, setPaymentMethod] = useState(false);
-  const [withdrawAmount, setWithdrawAmount] = useState(50);
+  const [paymentMethod, setPaymentMethod] = useState(false); // Estado para controlar la visualización del formulario de método de retiro
+  const [withdrawAmount, setWithdrawAmount] = useState(50); // Estado para la cantidad de retiro
   const [bankInfo, setBankInfo] = useState({
     bankName: "",
     bankCountry: "",
@@ -22,12 +23,13 @@ const WithdrawMoney = () => {
     bankAccountNumber: null,
     bankHolderName: "",
     bankAddress: "",
-  });
+  }); // Estado para la información del banco
 
   useEffect(() => {
-    dispatch(getAllOrdersOfShop(seller._id));
+    dispatch(getAllOrdersOfShop(seller._id)); // Obtener todas las órdenes de la tienda al cargar el componente
   }, [dispatch]);
 
+  // Manejar la presentación del formulario para agregar nuevo método de retiro
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -67,6 +69,7 @@ const WithdrawMoney = () => {
       });
   };
 
+   // Manejar la eliminación del método de retiro existente
   const deleteHandler = async () => {
     await axios
       .delete(`${server}/shop/delete-withdraw-method`, {
@@ -78,10 +81,12 @@ const WithdrawMoney = () => {
       });
   };
 
+  // Manejar el caso de error cuando no hay suficiente saldo para el retiro
   const error = () => {
     toast.error("You not have enough balance to withdraw!");
   };
 
+    // Manejar la solicitud de retiro de dinero
   const withdrawHandler = async () => {
     if (withdrawAmount < 50 || withdrawAmount > availableBalance) {
       toast.error("You can't withdraw this amount!");
@@ -99,8 +104,10 @@ const WithdrawMoney = () => {
     }
   };
 
+  // Obtener el saldo disponible del vendedor
   const availableBalance = seller?.availableBalance.toFixed(2);
 
+   // Renderización del componente
   return (
     <div className="w-full h-[90vh] p-8">
       <div className="w-full bg-white h-full rounded flex items-center justify-center flex-col">

@@ -1,3 +1,4 @@
+// Importaciones de librerías y componentes necesarios
 import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect } from "react";
@@ -8,21 +9,27 @@ import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
 
+// Componente funcional "AllProducts" que muestra todos los productos
 const AllProducts = () => {
+  // Obtiene datos de productos y estado de carga del estado global de Redux
   const { products, isLoading } = useSelector((state) => state.products);
   const { seller } = useSelector((state) => state.seller);
 
+  // Obtiene la función de despacho de Redux
   const dispatch = useDispatch();
 
+  // Efecto que se ejecuta al cargar el componente para obtener todos los productos del vendedor
   useEffect(() => {
     dispatch(getAllProductsShop(seller._id));
   }, [dispatch]);
 
+  // Manejador de eventos para borrar un producto
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
     window.location.reload();
   };
 
+  // Definición de columnas para el DataGrid
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
     {
@@ -44,7 +51,6 @@ const AllProducts = () => {
       minWidth: 80,
       flex: 0.5,
     },
-
     {
       field: "sold",
       headerName: "Sold out",
@@ -60,6 +66,7 @@ const AllProducts = () => {
       type: "number",
       sortable: false,
       renderCell: (params) => {
+        // Renderiza un botón de enlace a la página de detalles del producto
         return (
           <>
             <Link to={`/product/${params.id}`}>
@@ -79,6 +86,7 @@ const AllProducts = () => {
       type: "number",
       sortable: false,
       renderCell: (params) => {
+        // Renderiza un botón para eliminar el producto
         return (
           <>
             <Button onClick={() => handleDelete(params.id)}>
@@ -90,8 +98,10 @@ const AllProducts = () => {
     },
   ];
 
+  // Arreglo de datos para el DataGrid
   const row = [];
 
+  // Llena el arreglo de datos con la información de los productos
   products &&
     products.forEach((item) => {
       row.push({
@@ -103,11 +113,14 @@ const AllProducts = () => {
       });
     });
 
+  // Renderizado del componente
   return (
     <>
       {isLoading ? (
+        // Muestra un componente de carga si isLoading es true
         <Loader />
       ) : (
+        // Muestra el DataGrid con la lista de productos si isLoading es false
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
           <DataGrid
             rows={row}
@@ -122,4 +135,5 @@ const AllProducts = () => {
   );
 };
 
+// Exporta el componente "AllProducts" para que pueda ser utilizado en otros archivos
 export default AllProducts;

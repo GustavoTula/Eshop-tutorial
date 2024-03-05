@@ -1,3 +1,4 @@
+// Importación de módulos y componentes necesarios de React y Material-UI
 import React, { useEffect, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineMoneyCollect } from "react-icons/ai";
 import styles from "../../styles/styles";
@@ -9,19 +10,23 @@ import { getAllProductsShop } from "../../redux/actions/product";
 import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
+// Componente funcional "DashboardHero" para la página de inicio del panel de control
 const DashboardHero = () => {
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
 
+  // Efecto para obtener las órdenes y productos del vendedor al cargar el componente
   useEffect(() => {
      dispatch(getAllOrdersOfShop(seller._id));
      dispatch(getAllProductsShop(seller._id));
   }, [dispatch]);
 
+  // Obtener el saldo disponible del vendedor con formato de dos decimales
   const availableBalance = seller?.availableBalance.toFixed(2);
 
+  // Definir las columnas para el DataGrid que muestra las últimas órdenes
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -73,8 +78,10 @@ const DashboardHero = () => {
     },
   ];
 
+  // Arreglo para almacenar datos de órdenes para el DataGrid
   const row = [];
 
+  // Iterar sobre las órdenes y agregar datos al arreglo
   orders && orders.forEach((item) => {
     row.push({
         id: item._id,
@@ -83,10 +90,14 @@ const DashboardHero = () => {
         status: item.status,
       });
   });
+
+  // Renderizado del componente
   return (
     <div className="w-full p-8">
+      {/* Sección de resumen de la cuenta */}
       <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
       <div className="w-full block 800px:flex items-center justify-between">
+        {/* Bloque de saldo disponible */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <AiOutlineMoneyCollect
@@ -107,6 +118,7 @@ const DashboardHero = () => {
           </Link>
         </div>
 
+        {/* Bloque de cantidad de órdenes */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <MdBorderClear size={30} className="mr-2" fill="#00000085" />
@@ -122,6 +134,7 @@ const DashboardHero = () => {
           </Link>
         </div>
 
+        {/* Bloque de cantidad de productos */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <AiOutlineMoneyCollect
@@ -142,18 +155,23 @@ const DashboardHero = () => {
         </div>
       </div>
       <br />
+
+      {/* Sección de últimas órdenes */}
       <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
       <div className="w-full min-h-[45vh] bg-white rounded">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-        autoHeight
-      />
+        {/* DataGrid para mostrar las últimas órdenes */}
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
       </div>
     </div>
   );
 };
 
+// Exporta el componente "DashboardHero" para su uso en otros archivos
 export default DashboardHero;
+

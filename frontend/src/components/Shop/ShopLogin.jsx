@@ -6,12 +6,14 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
+// Componente funcional para la página de inicio de sesión de la tienda
 const ShopLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
+  // Función para manejar el envío del formulario de inicio de sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,13 +29,14 @@ const ShopLogin = () => {
       .then((res) => {
         toast.success("Login Success!");
         navigate("/dashboard");
-        window.location.reload(true); 
+        window.location.reload(true); // Recarga la página después del inicio de sesión
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
   };
 
+  // Renderización del componente
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -43,7 +46,9 @@ const ShopLogin = () => {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {/* Formulario de inicio de sesión */}
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Campo de correo electrónico */}
             <div>
               <label
                 htmlFor="email"
@@ -63,6 +68,7 @@ const ShopLogin = () => {
                 />
               </div>
             </div>
+            {/* Campo de contraseña con opción de visibilidad */}
             <div>
               <label
                 htmlFor="password"
@@ -80,6 +86,7 @@ const ShopLogin = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
+                {/* Icono de ojo para mostrar/ocultar contraseña */}
                 {visible ? (
                   <AiOutlineEye
                     className="absolute right-2 top-2 cursor-pointer"
@@ -95,8 +102,10 @@ const ShopLogin = () => {
                 )}
               </div>
             </div>
+            {/* Sección de opciones adicionales: Recordarme y Olvidé mi contraseña */}
             <div className={`${styles.noramlFlex} justify-between`}>
               <div className={`${styles.noramlFlex}`}>
+                {/* Checkbox para recordar al usuario */}
                 <input
                   type="checkbox"
                   name="remember-me"
@@ -111,6 +120,7 @@ const ShopLogin = () => {
                 </label>
               </div>
               <div className="text-sm">
+                {/* Enlace para recuperar la contraseña */}
                 <a
                   href=".forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500"
@@ -119,6 +129,7 @@ const ShopLogin = () => {
                 </a>
               </div>
             </div>
+            {/* Botón de envío del formulario */}
             <div>
               <button
                 type="submit"
@@ -127,8 +138,10 @@ const ShopLogin = () => {
                 Submit
               </button>
             </div>
+            {/* Sección de registro */}
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Not have any account?</h4>
+              {/* Enlace para registrarse */}
               <Link to="/shop-create" className="text-blue-600 pl-2">
                 Sign Up
               </Link>
@@ -141,3 +154,4 @@ const ShopLogin = () => {
 };
 
 export default ShopLogin;
+

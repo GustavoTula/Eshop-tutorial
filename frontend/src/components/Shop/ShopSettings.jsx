@@ -7,6 +7,7 @@ import axios from "axios";
 import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
 
+// Componente funcional para configurar y actualizar la información de la tienda
 const ShopSettings = () => {
   const { seller } = useSelector((state) => state.seller);
   const [avatar, setAvatar] = useState();
@@ -20,12 +21,14 @@ const ShopSettings = () => {
 
   const dispatch = useDispatch();
 
+  // Manejar la selección de una nueva imagen de avatar
   const handleImage = async (e) => {
     const reader = new FileReader();
 
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatar(reader.result);
+        // Actualizar el avatar de la tienda en el servidor
         axios
           .put(
             `${server}/shop/update-shop-avatar`,
@@ -47,6 +50,7 @@ const ShopSettings = () => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  // Manejar la actualización de la información de la tienda
   const updateHandler = async (e) => {
     e.preventDefault();
 
@@ -70,7 +74,7 @@ const ShopSettings = () => {
         toast.error(error.response.data.message);
       });
   };
-
+  // Renderización del componente
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
       <div className="flex w-full 800px:w-[80%] flex-col justify-center my-5">
@@ -95,7 +99,7 @@ const ShopSettings = () => {
           </div>
         </div>
 
-        {/* shop info */}
+        {/* Formulario para actualizar la información de la tienda */}
         <form
           aria-aria-required={true}
           className="flex flex-col items-center"

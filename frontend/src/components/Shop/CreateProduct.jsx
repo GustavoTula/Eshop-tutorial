@@ -1,3 +1,4 @@
+// Importación de módulos y componentes necesarios de React y Redux
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,12 +7,15 @@ import { createProduct } from "../../redux/actions/product";
 import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
 
+// Componente funcional "CreateProduct" para la creación de productos
 const CreateProduct = () => {
+  // Obtener datos del vendedor y mensajes de éxito/error del estado global de Redux
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.products);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Estados locales para el formulario de creación de productos
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -21,6 +25,7 @@ const CreateProduct = () => {
   const [discountPrice, setDiscountPrice] = useState();
   const [stock, setStock] = useState();
 
+  // Efecto que maneja mensajes de éxito y error del estado global de Redux
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -32,6 +37,7 @@ const CreateProduct = () => {
     }
   }, [dispatch, error, success]);
 
+  // Manejador de cambio de imágenes
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
@@ -49,14 +55,19 @@ const CreateProduct = () => {
     });
   };
 
+  // Manejador de envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Crear nuevo formulario de datos
     const newForm = new FormData();
 
+    // Agregar imágenes al formulario
     images.forEach((image) => {
       newForm.set("images", image);
     });
+
+    // Agregar otros datos al formulario
     newForm.append("name", name);
     newForm.append("description", description);
     newForm.append("category", category);
@@ -65,6 +76,8 @@ const CreateProduct = () => {
     newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
     newForm.append("shopId", seller._id);
+
+    // Despachar la acción de creación de producto con los datos del formulario
     dispatch(
       createProduct({
         name,
@@ -80,12 +93,16 @@ const CreateProduct = () => {
     );
   };
 
+  // Renderizado del componente
   return (
     <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Product</h5>
-      {/* create product form */}
+      
+      {/* Formulario de creación de productos */}
       <form onSubmit={handleSubmit}>
         <br />
+
+        {/* Campo para el nombre del producto */}
         <div>
           <label className="pb-2">
             Name <span className="text-red-500">*</span>
@@ -100,6 +117,8 @@ const CreateProduct = () => {
           />
         </div>
         <br />
+
+        {/* Campo para la descripción del producto */}
         <div>
           <label className="pb-2">
             Description <span className="text-red-500">*</span>
@@ -117,6 +136,8 @@ const CreateProduct = () => {
           ></textarea>
         </div>
         <br />
+
+        {/* Campo para seleccionar la categoría del producto */}
         <div>
           <label className="pb-2">
             Category <span className="text-red-500">*</span>
@@ -136,6 +157,8 @@ const CreateProduct = () => {
           </select>
         </div>
         <br />
+
+        {/* Campo para ingresar etiquetas del producto */}
         <div>
           <label className="pb-2">Tags</label>
           <input
@@ -148,6 +171,8 @@ const CreateProduct = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar el precio original del producto */}
         <div>
           <label className="pb-2">Original Price</label>
           <input
@@ -160,6 +185,8 @@ const CreateProduct = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar el precio con descuento del producto */}
         <div>
           <label className="pb-2">
             Price (With Discount) <span className="text-red-500">*</span>
@@ -174,6 +201,8 @@ const CreateProduct = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar el stock del producto */}
         <div>
           <label className="pb-2">
             Product Stock <span className="text-red-500">*</span>
@@ -188,6 +217,8 @@ const CreateProduct = () => {
           />
         </div>
         <br />
+
+        {/* Campo para subir imágenes del producto */}
         <div>
           <label className="pb-2">
             Upload Images <span className="text-red-500">*</span>
@@ -215,6 +246,8 @@ const CreateProduct = () => {
               ))}
           </div>
           <br />
+
+          {/* Botón para enviar el formulario */}
           <div>
             <input
               type="submit"
@@ -228,4 +261,5 @@ const CreateProduct = () => {
   );
 };
 
+// Exporta el componente "CreateProduct" para su uso en otros archivos
 export default CreateProduct;

@@ -1,3 +1,4 @@
+// Importación de React y otros módulos necesarios
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,12 +7,17 @@ import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
 import { createevent } from "../../redux/actions/event";
 
+// Componente funcional "CreateEvent" para la creación de eventos
 const CreateEvent = () => {
+  // Obtiene datos del vendedor y mensajes de éxito/error del estado global de Redux
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.events);
+
+  // Obtiene la función de navegación y de despacho de Redux
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Estados locales para el formulario de creación de eventos
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -23,15 +29,13 @@ const CreateEvent = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
+  // Manejadores de cambio de fechas de inicio y fin
   const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);
     const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
     setStartDate(startDate);
     setEndDate(null);
-    document.getElementById("end-date").min = minEndDate.toISOString.slice(
-      0,
-      10
-    );
+    document.getElementById("end-date").min = minEndDate.toISOString.slice(0, 10);
   };
 
   const handleEndDateChange = (e) => {
@@ -39,14 +43,11 @@ const CreateEvent = () => {
     setEndDate(endDate);
   };
 
+  // Configuración de fechas mínimas y actuales
   const today = new Date().toISOString().slice(0, 10);
+  const minEndDate = startDate ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : "";
 
-  const minEndDate = startDate
-    ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .slice(0, 10)
-    : "";
-
+  // Efecto que maneja mensajes de éxito y error del estado global de Redux
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -58,6 +59,7 @@ const CreateEvent = () => {
     }
   }, [dispatch, error, success]);
 
+  // Manejador de cambio de imágenes
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
@@ -75,6 +77,7 @@ const CreateEvent = () => {
     });
   };
 
+  // Manejador de envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -83,6 +86,7 @@ const CreateEvent = () => {
     images.forEach((image) => {
       newForm.append("images", image);
     });
+
     const data = {
       name,
       description,
@@ -96,15 +100,20 @@ const CreateEvent = () => {
       start_Date: startDate?.toISOString(),
       Finish_Date: endDate?.toISOString(),
     };
+
     dispatch(createevent(data));
   };
 
+  // Renderizado del componente
   return (
     <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Event</h5>
-      {/* create event form */}
+      
+      {/* Formulario de creación de eventos */}
       <form onSubmit={handleSubmit}>
         <br />
+
+        {/* Campo para el nombre del evento */}
         <div>
           <label className="pb-2">
             Name <span className="text-red-500">*</span>
@@ -119,6 +128,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para la descripción del evento */}
         <div>
           <label className="pb-2">
             Description <span className="text-red-500">*</span>
@@ -136,6 +147,8 @@ const CreateEvent = () => {
           ></textarea>
         </div>
         <br />
+
+        {/* Campo para seleccionar la categoría del evento */}
         <div>
           <label className="pb-2">
             Category <span className="text-red-500">*</span>
@@ -155,6 +168,8 @@ const CreateEvent = () => {
           </select>
         </div>
         <br />
+
+        {/* Campo para ingresar etiquetas del evento */}
         <div>
           <label className="pb-2">Tags</label>
           <input
@@ -167,6 +182,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar el precio original del evento */}
         <div>
           <label className="pb-2">Original Price</label>
           <input
@@ -179,6 +196,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar el precio con descuento del evento */}
         <div>
           <label className="pb-2">
             Price (With Discount) <span className="text-red-500">*</span>
@@ -193,6 +212,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar el stock del evento */}
         <div>
           <label className="pb-2">
             Product Stock <span className="text-red-500">*</span>
@@ -207,6 +228,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar la fecha de inicio del evento */}
         <div>
           <label className="pb-2">
             Event Start Date <span className="text-red-500">*</span>
@@ -223,6 +246,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para ingresar la fecha de fin del evento */}
         <div>
           <label className="pb-2">
             Event End Date <span className="text-red-500">*</span>
@@ -239,6 +264,8 @@ const CreateEvent = () => {
           />
         </div>
         <br />
+
+        {/* Campo para subir imágenes del evento */}
         <div>
           <label className="pb-2">
             Upload Images <span className="text-red-500">*</span>
@@ -266,6 +293,8 @@ const CreateEvent = () => {
               ))}
           </div>
           <br />
+
+          {/* Botón para enviar el formulario */}
           <div>
             <input
               type="submit"
@@ -279,4 +308,5 @@ const CreateEvent = () => {
   );
 };
 
+// Exporta el componente "CreateEvent" para su uso en otros archivos
 export default CreateEvent;

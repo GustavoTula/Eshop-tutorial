@@ -7,7 +7,9 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 import { RxAvatar } from "react-icons/rx";
 
+// Componente funcional para el registro de tiendas
 const ShopCreate = () => {
+  // Estados para los datos del formulario
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState();
@@ -17,6 +19,7 @@ const ShopCreate = () => {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
+  // Función para enviar el formulario al servidor
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,6 +35,7 @@ const ShopCreate = () => {
       })
       .then((res) => {
         toast.success(res.data.message);
+        // Limpiar el formulario después del registro exitoso
         setName("");
         setEmail("");
         setPassword("");
@@ -44,7 +48,7 @@ const ShopCreate = () => {
         toast.error(error.response.data.message);
       });
   };
-
+  // Función para manejar la carga de la imagen del avatar
   const handleFileInputChange = (e) => {
     const reader = new FileReader();
 
@@ -57,6 +61,7 @@ const ShopCreate = () => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  // Renderización del componente
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -67,6 +72,7 @@ const ShopCreate = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-[35rem]">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Formulario de registro */}
             <div>
               <label
                 htmlFor="email"

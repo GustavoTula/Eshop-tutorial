@@ -1,3 +1,4 @@
+// Importaciones de librerías y componentes necesarios
 import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from "axios";
@@ -10,7 +11,9 @@ import Loader from "../Layout/Loader";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
+// Componente funcional "AllCoupons" que muestra todos los cupones
 const AllCoupons = () => {
+  // Estados para el manejo de la apertura del modal, datos del nuevo cupón, carga y listado de cupones
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +22,14 @@ const AllCoupons = () => {
   const [maxAmount, setMaxAmount] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [value, setValue] = useState(null);
+
+  // Obtiene datos del vendedor y productos del estado global de Redux
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
 
   const dispatch = useDispatch();
 
+  // Efecto que se ejecuta al cargar el componente para obtener los cupones del vendedor
   useEffect(() => {
     setIsLoading(true);
     axios
@@ -39,13 +45,16 @@ const AllCoupons = () => {
       });
   }, [dispatch]);
 
+  // Función para manejar la eliminación de un cupón
   const handleDelete = async (id) => {
-    axios.delete(`${server}/coupon/delete-coupon/${id}`,{withCredentials: true}).then((res) => {
-      toast.success("Coupon code deleted succesfully!")
-    })
+    axios.delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true })
+      .then((res) => {
+        toast.success("Coupon code deleted successfully!");
+      })
     window.location.reload();
   };
 
+  // Función para manejar el envío del formulario de creación de un nuevo cupón
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -72,6 +81,7 @@ const AllCoupons = () => {
       });
   };
 
+  // Definición de columnas para el DataGrid
   const columns = [
     { field: "id", headerName: "Id", minWidth: 150, flex: 0.7 },
     {
@@ -105,6 +115,7 @@ const AllCoupons = () => {
     },
   ];
 
+  // Arreglo de datos para el DataGrid
   const row = [];
 
   coupouns &&
@@ -117,6 +128,7 @@ const AllCoupons = () => {
       });
     });
 
+  // Renderizado del componente
   return (
     <>
       {isLoading ? (
@@ -151,7 +163,7 @@ const AllCoupons = () => {
                 <h5 className="text-[30px] font-Poppins text-center">
                   Create Coupon code
                 </h5>
-                {/* create coupoun code */}
+                {/* Formulario para la creación de un nuevo cupón */}
                 <form onSubmit={handleSubmit} aria-required={true}>
                   <br />
                   <div>
@@ -171,7 +183,7 @@ const AllCoupons = () => {
                   <br />
                   <div>
                     <label className="pb-2">
-                      Discount Percentenge{" "}
+                      Discount Percentage{" "}
                       <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -245,4 +257,5 @@ const AllCoupons = () => {
   );
 };
 
+// Exporta el componente "AllCoupons" para que pueda ser utilizado en otros archivos
 export default AllCoupons;

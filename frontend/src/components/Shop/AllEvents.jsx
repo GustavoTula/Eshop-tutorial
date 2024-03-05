@@ -1,3 +1,4 @@
+// Importaciones de librerías y componentes necesarios
 import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect } from "react";
@@ -9,21 +10,27 @@ import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
 
+// Componente funcional "AllEvents" que muestra todos los eventos
 const AllEvents = () => {
+  // Obtiene datos de eventos y estado de carga del estado global de Redux
   const { events, isLoading } = useSelector((state) => state.events);
   const { seller } = useSelector((state) => state.seller);
 
+  // Obtiene la función de despacho de Redux
   const dispatch = useDispatch();
 
+  // Efecto que se ejecuta al cargar el componente para obtener todos los eventos del vendedor
   useEffect(() => {
     dispatch(getAllEventsShop(seller._id));
   }, [dispatch]);
 
+  // Función para manejar la eliminación de un evento
   const handleDelete = (id) => {
     dispatch(deleteEvent(id));
     window.location.reload();
   }
 
+  // Definición de columnas para el DataGrid
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
     {
@@ -45,7 +52,6 @@ const AllEvents = () => {
       minWidth: 80,
       flex: 0.5,
     },
-
     {
       field: "sold",
       headerName: "Sold out",
@@ -61,6 +67,7 @@ const AllEvents = () => {
       type: "number",
       sortable: false,
       renderCell: (params) => {
+        // Genera el enlace al producto utilizando el nombre y reemplazando espacios con guiones
         const d = params.row.name;
         const product_name = d.replace(/\s+/g, "-");
         return (
@@ -85,7 +92,7 @@ const AllEvents = () => {
         return (
           <>
             <Button
-            onClick={() => handleDelete(params.id)}
+              onClick={() => handleDelete(params.id)}
             >
               <AiOutlineDelete size={20} />
             </Button>
@@ -95,6 +102,7 @@ const AllEvents = () => {
     },
   ];
 
+  // Arreglo de datos para el DataGrid
   const row = [];
 
   events &&
@@ -108,12 +116,14 @@ const AllEvents = () => {
       });
     });
 
+  // Renderizado del componente
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
+          {/* DataGrid para mostrar la lista de eventos */}
           <DataGrid
             rows={row}
             columns={columns}
@@ -127,4 +137,5 @@ const AllEvents = () => {
   );
 };
 
+// Exporta el componente "AllEvents" para que pueda ser utilizado en otros archivos
 export default AllEvents;

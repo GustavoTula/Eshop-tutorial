@@ -1,3 +1,4 @@
+// Importación de módulos y componentes necesarios
 import axios from "axios";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
@@ -9,11 +10,15 @@ import styles from "../../styles/styles";
 import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
+
+// Configuración del punto final para el socket.io
 const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
+// Componente funcional para la página de mensajes del panel de control
 const DashboardMessages = () => {
-  const { seller,isLoading } = useSelector((state) => state.seller);
+  // Hooks para gestionar el estado
+  const { seller, isLoading } = useSelector((state) => state.seller);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [currentChat, setCurrentChat] = useState();
@@ -26,6 +31,7 @@ const DashboardMessages = () => {
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
 
+  // Efecto para manejar la llegada de nuevos mensajes
   useEffect(() => {
     socketId.on("getMessage", (data) => {
       setArrivalMessage({
@@ -36,30 +42,33 @@ const DashboardMessages = () => {
     });
   }, []);
 
+  // Efecto para agregar el mensaje de llegada a la conversación actual
   useEffect(() => {
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
 
+  // Efecto para obtener la lista de conversaciones del vendedor
   useEffect(() => {
     const getConversation = async () => {
       try {
-        const resonse = await axios.get(
+        const response = await axios.get(
           `${server}/conversation/get-all-conversation-seller/${seller?._id}`,
           {
             withCredentials: true,
           }
         );
 
-        setConversations(resonse.data.conversations);
+        setConversations(response.data.conversations);
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     };
     getConversation();
   }, [seller, messages]);
 
+  // Efecto para agregar al vendedor a la lista de usuarios en línea al conectar el socket
   useEffect(() => {
     if (seller) {
       const sellerId = seller?._id;
@@ -70,6 +79,7 @@ const DashboardMessages = () => {
     }
   }, [seller]);
 
+  // Función para verificar si un usuario está en línea
   const onlineCheck = (chat) => {
     const chatMembers = chat.members.find((member) => member !== seller?._id);
     const online = onlineUsers.find((user) => user.userId === chatMembers);
@@ -77,7 +87,7 @@ const DashboardMessages = () => {
     return online ? true : false;
   };
 
-  // get messages
+  // Efecto para obtener los mensajes de la conversación actual
   useEffect(() => {
     const getMessage = async () => {
       try {
@@ -92,7 +102,7 @@ const DashboardMessages = () => {
     getMessage();
   }, [currentChat]);
 
-  // create new message
+  // Función para enviar un nuevo mensaje
   const sendMessageHandler = async (e) => {
     e.preventDefault();
 
@@ -129,6 +139,7 @@ const DashboardMessages = () => {
     }
   };
 
+  // Función para actualizar el último mensaje de la conversación
   const updateLastMessage = async () => {
     socketId.emit("updateLastMessage", {
       lastMessage: newMessage,
@@ -149,6 +160,7 @@ const DashboardMessages = () => {
       });
   };
 
+  // Función para manejar la carga de imágenes
   const handleImageUpload = async (e) => {
     const reader = new FileReader();
 
@@ -162,6 +174,7 @@ const DashboardMessages = () => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  // Función para manejar el envío de imágenes
   const imageSendingHandler = async (e) => {
     const receiverId = currentChat.members.find(
       (member) => member !== seller._id
@@ -191,6 +204,7 @@ const DashboardMessages = () => {
     }
   };
 
+  // Función para actualizar el último mensaje de la conversación al enviar una imagen
   const updateLastMessageForImage = async () => {
     await axios.put(
       `${server}/conversation/update-last-message/${currentChat._id}`,
@@ -201,10 +215,12 @@ const DashboardMessages = () => {
     );
   };
 
+  // Efecto para desplazarse automáticamente al final de la lista de mensajes
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ beahaviour: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Renderización del componente
   return (
     <div className="w-[90%] bg-white m-5 h-[85vh] overflow-y-scroll rounded">
       {!open && (
@@ -212,7 +228,7 @@ const DashboardMessages = () => {
           <h1 className="text-center text-[30px] py-3 font-Poppins">
             All Messages
           </h1>
-          {/* All messages list */}
+          {/* Listado de todas las conversaciones */}
           {conversations &&
             conversations.map((item, index) => (
               <MessageList
@@ -251,6 +267,7 @@ const DashboardMessages = () => {
   );
 };
 
+// Componente funcional para la lista de conversaciones
 const MessageList = ({
   data,
   index,
@@ -260,9 +277,9 @@ const MessageList = ({
   setUserData,
   online,
   setActiveStatus,
-  isLoading
+  isLoading,
 }) => {
-  console.log(data);
+  // Hooks para gestionar el estado
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
   const handleClick = (id) => {
@@ -271,6 +288,7 @@ const MessageList = ({
   };
   const [active, setActive] = useState(0);
 
+  // Efecto para obtener la información del usuario de la conversación
   useEffect(() => {
     const userId = data.members.find((user) => user != me);
 
@@ -285,6 +303,7 @@ const MessageList = ({
     getUser();
   }, [me, data]);
 
+  // Renderización del componente
   return (
     <div
       className={`w-full flex p-3 px-3 ${
@@ -323,6 +342,7 @@ const MessageList = ({
   );
 };
 
+// Componente funcional para la bandeja de entrada del vendedor
 const SellerInbox = ({
   scrollRef,
   setOpen,
@@ -335,9 +355,10 @@ const SellerInbox = ({
   activeStatus,
   handleImageUpload,
 }) => {
+  // Renderización del componente
   return (
     <div className="w-full min-h-full flex flex-col justify-between">
-      {/* message header */}
+      {/* Encabezado de mensajes */}
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
@@ -357,7 +378,7 @@ const SellerInbox = ({
         />
       </div>
 
-      {/* messages */}
+      {/* Mensajes */}
       <div className="px-3 h-[65vh] py-3 overflow-y-scroll">
         {messages &&
           messages.map((item, index) => {
@@ -401,7 +422,7 @@ const SellerInbox = ({
           })}
       </div>
 
-      {/* send message input */}
+      {/* Entrada de mensaje */}
       <form
         aria-required={true}
         className="p-3 relative w-full flex justify-between items-center"
@@ -441,4 +462,5 @@ const SellerInbox = ({
   );
 };
 
+// Exportación del componente principal
 export default DashboardMessages;
