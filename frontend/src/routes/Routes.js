@@ -1,3 +1,4 @@
+// Importación de componentes de la página 
 import LoginPage from "../pages/Login";
 import SignupPage from "../pages/SignupPage";
 import ActivationPage from "../pages/ActivationPage";
@@ -18,6 +19,7 @@ import OrderDetailsPage from "../pages/OrderDetailsPage";
 import TrackOrderPage from "../pages/TrackOrderPage";
 import UserInbox from "../pages/UserInbox.jsx";
 
+// Exportación de los componentes para su uso en otros archivos
 export { 
     LoginPage,
     SignupPage,
