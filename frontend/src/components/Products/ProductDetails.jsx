@@ -1,3 +1,4 @@
+// Importación de módulos y componentes necesarios
 import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
@@ -19,16 +20,22 @@ import { toast } from "react-toastify";
 import Ratings from "./Ratings";
 import axios from "axios";
 
+// Componente para mostrar los detalles del producto
 const ProductDetails = ({ data }) => {
+  // Obtención de datos del estado global utilizando useSelector
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { products } = useSelector((state) => state.products);
+
+  // Estado local para el contador de productos y selección de imágenes
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Efecto secundario para cargar los productos de la tienda y manejar la lista de deseos
   useEffect(() => {
     dispatch(getAllProductsShop(data && data?.shop._id));
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
@@ -38,41 +45,47 @@ const ProductDetails = ({ data }) => {
     }
   }, [data, wishlist]);
 
+  // Función para incrementar el contador de productos
   const incrementCount = () => {
     setCount(count + 1);
   };
 
+  // Función para decrementar el contador de productos
   const decrementCount = () => {
     if (count > 1) {
       setCount(count - 1);
     }
   };
 
+  // Manejador para remover un producto de la lista de deseos
   const removeFromWishlistHandler = (data) => {
     setClick(!click);
     dispatch(removeFromWishlist(data));
   };
 
+  // Manejador para agregar un producto a la lista de deseos
   const addToWishlistHandler = (data) => {
     setClick(!click);
     dispatch(addToWishlist(data));
   };
 
+  // Manejador para agregar un producto al carrito de compras
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
-      toast.error("Item already in cart!");
+      toast.error("¡Producto ya en el carrito!");
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.error("¡Stock limitado del producto!");
       } else {
         const cartData = { ...data, qty: count };
         dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
+        toast.success("¡Producto agregado al carrito exitosamente!");
       }
     }
   };
 
+  // Cálculos para obtener estadísticas de reseñas y calificaciones
   const totalReviewsLength =
     products &&
     products.reduce((acc, product) => acc + product.reviews.length, 0);
@@ -85,11 +98,11 @@ const ProductDetails = ({ data }) => {
       0
     );
 
-  const avg =  totalRatings / totalReviewsLength || 0;
+  const avg = totalRatings / totalReviewsLength || 0;
 
   const averageRating = avg.toFixed(2);
 
-
+  // Manejador para enviar un mensaje al vendedor
   const handleMessageSubmit = async () => {
     if (isAuthenticated) {
       const groupTitle = data._id + user._id;
@@ -108,10 +121,11 @@ const ProductDetails = ({ data }) => {
           toast.error(error.response.data.message);
         });
     } else {
-      toast.error("Please login to create a conversation");
+      toast.error("Por favor, inicia sesión para crear una conversación");
     }
   };
 
+  // Renderizado del componente
   return (
     <div className="bg-white">
       {data ? (
@@ -184,7 +198,7 @@ const ProductDetails = ({ data }) => {
                         className="cursor-pointer"
                         onClick={() => removeFromWishlistHandler(data)}
                         color={click ? "red" : "#333"}
-                        title="Remove from wishlist"
+                        title="Eliminar de la lista de deseos"
                       />
                     ) : (
                       <AiOutlineHeart
@@ -192,7 +206,7 @@ const ProductDetails = ({ data }) => {
                         className="cursor-pointer"
                         onClick={() => addToWishlistHandler(data)}
                         color={click ? "red" : "#333"}
-                        title="Add to wishlist"
+                        title="Agregar a la lista de deseos"
                       />
                     )}
                   </div>
@@ -202,7 +216,7 @@ const ProductDetails = ({ data }) => {
                   onClick={() => addToCartHandler(data._id)}
                 >
                   <span className="text-white flex items-center">
-                    Add to cart <AiOutlineShoppingCart className="ml-1" />
+                    Agregar al carrito <AiOutlineShoppingCart className="ml-1" />
                   </span>
                 </div>
                 <div className="flex items-center pt-8">
@@ -220,7 +234,7 @@ const ProductDetails = ({ data }) => {
                       </h3>
                     </Link>
                     <h5 className="pb-3 text-[15px]">
-                      ({averageRating}/5) Ratings
+                      ({averageRating}/5) Calificaciones
                     </h5>
                   </div>
                   <div
@@ -228,7 +242,7 @@ const ProductDetails = ({ data }) => {
                     onClick={handleMessageSubmit}
                   >
                     <span className="text-white flex items-center">
-                      Send Message <AiOutlineMessage className="ml-1" />
+                      Enviar mensaje <AiOutlineMessage className="ml-1" />
                     </span>
                   </div>
                 </div>
@@ -249,6 +263,7 @@ const ProductDetails = ({ data }) => {
   );
 };
 
+// Componente secundario para mostrar información adicional del producto
 const ProductDetailsInfo = ({
   data,
   products,
@@ -267,7 +282,7 @@ const ProductDetailsInfo = ({
             }
             onClick={() => setActive(1)}
           >
-            Product Details
+            Detalles del producto
           </h5>
           {active === 1 ? (
             <div className={`${styles.active_indicator}`} />
@@ -280,7 +295,7 @@ const ProductDetailsInfo = ({
             }
             onClick={() => setActive(2)}
           >
-            Product Reviews
+            Reseñas del producto
           </h5>
           {active === 2 ? (
             <div className={`${styles.active_indicator}`} />
@@ -293,7 +308,7 @@ const ProductDetailsInfo = ({
             }
             onClick={() => setActive(3)}
           >
-            Seller Information
+            Información del vendedor
           </h5>
           {active === 3 ? (
             <div className={`${styles.active_indicator}`} />
@@ -330,7 +345,7 @@ const ProductDetailsInfo = ({
 
           <div className="w-full flex justify-center">
             {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
+              <h5>No hay reseñas para este producto.</h5>
             )}
           </div>
         </div>
@@ -349,7 +364,7 @@ const ProductDetailsInfo = ({
                 <div className="pl-3">
                   <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                   <h5 className="pb-2 text-[15px]">
-                    ({averageRating}/5) Ratings
+                    ({averageRating}/5) Calificaciones
                   </h5>
                 </div>
               </div>
@@ -359,26 +374,26 @@ const ProductDetailsInfo = ({
           <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-[600]">
-                Joined on:{" "}
+                Se unió en:{" "}
                 <span className="font-[500]">
                   {data.shop?.createdAt?.slice(0, 10)}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
-                Total Products:{" "}
+                Total de productos:{" "}
                 <span className="font-[500]">
                   {products && products.length}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
-                Total Reviews:{" "}
+                Total de reseñas:{" "}
                 <span className="font-[500]">{totalReviewsLength}</span>
               </h5>
               <Link to="/">
                 <div
                   className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
                 >
-                  <h4 className="text-white">Visit Shop</h4>
+                  <h4 className="text-white">Visitar tienda</h4>
                 </div>
               </Link>
             </div>
